@@ -6,6 +6,16 @@
 
 *English: one-page viewer/editor for a folder of Markdown docs (Obsidian-style vaults included). Edits are written straight back to the files through the File System Access API. Open the hosted page in Edge/Chrome, pick your repo folder, done. AI agents: see [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md).*
 
+## Содержание
+
+- [Что умеет](#что-умеет)
+- [Запуск локально (без интернета и сервера)](#запуск-локально-без-интернета-и-сервера)
+- [Подключить к своему проекту](#подключить-к-своему-проекту)
+- [Ограничения](#ограничения)
+- [Разработка](#разработка)
+- [Инструкция для ИИ-агентов: совместимость документации](docs/AI_DOCS_SETUP.md)
+- [Правила для агентов, которые дорабатывают сам инструмент](AGENTS.md)
+
 ## Что умеет
 
 - Все `.md` файлы одной лентой, оглавление по папкам, поиск по всем документам с подсветкой.
