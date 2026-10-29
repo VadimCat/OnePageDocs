@@ -1,0 +1,63 @@
+# OnePageDocs
+
+Вся Markdown-документация папки одним документом, с правкой на месте. Правки сразу пишутся в `.md` файлы на диске, поэтому Obsidian, git и агенты видят их без экспорта и синхронизации. Ничего не нужно ставить и запускать сервер: это одна HTML-страница.
+
+**Открыть:** https://vadimcat.github.io/OnePageDocs/ (Edge или Chrome) или `index.html` из этого репозитория.
+
+*English: one-page viewer/editor for a folder of Markdown docs (Obsidian-style vaults included). Edits are written straight back to the files through the File System Access API. Open the hosted page in Edge/Chrome, pick your repo folder, done. AI agents: see [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md).*
+
+## Что умеет
+
+- Все `.md` файлы одной лентой, оглавление по папкам, поиск по всем документам с подсветкой.
+- Правка: двойной клик по тексту или кнопка ✎, режим «Править всё». Автосохранение через секунду, `Ctrl+S` — сохранить всё сразу.
+- Чекбоксы `- [ ]` отмечаются прямо в просмотре и пишутся в файл.
+- `[[wiki-ссылки]]`, `[[Документ#Раздел]]`, относительные `.md` ссылки и картинки работают внутри ленты.
+- Свойства front matter показываются плашками, статусы раскрашиваются.
+- Если файл поменялся на диске, пока ты его правил (Obsidian, git pull), редактор спросит, какую версию оставить.
+- Кодировка, BOM и переводы строк (CRLF/LF) файла сохраняются как были.
+- Запоминает папки и место, где ты остановился. При следующем открытии лента сразу прокручивается к последнему документу. Ссылка с `#путь/к/файлу.md` открывает конкретный документ.
+- `Ctrl+P` — печать всей ленты или сохранение в PDF.
+- Интерфейс на русском и английском, светлая и тёмная тема.
+
+## Подключить к своему проекту
+
+1. Открой страницу и выбери **корень репозитория**. Папка `docs` найдётся сама.
+2. По желанию добавь в корень `onepage-docs.json`: название, порядок и подписи групп, закреплённые документы, генерируемые файлы и т. д. Пример: [examples/onepage-docs.json](examples/onepage-docs.json). Все поля: [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md#3-конфиг-onepage-docsjson), [схема](onepage-docs.schema.json).
+3. Проверь совместимость:
+   ```bash
+   curl -sL https://raw.githubusercontent.com/VadimCat/OnePageDocs/main/tools/check.mjs | node - path/to/repo
+   ```
+
+Если доки готовит агент, дай ему [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md). Там правила, конфиг и порядок работы.
+
+Для Windows есть [launchers/OnePageDocs.bat](launchers/OnePageDocs.bat): кладёшь рядом с проектом, и он открывает редактор в Edge.
+
+## Ограничения
+
+- Нужен Chromium-браузер (Edge, Chrome, Opera, Brave): только у них есть запись в папки. В Firefox и Safari страница не откроет папку.
+- `.canvas`, `.base` и встраивания `![[...]]` из Obsidian не рендерятся, на их месте плашка.
+- Front matter читается плоский: `key: value` и списки.
+- Файлы не создаются, не переименовываются и не удаляются. Это делается в Obsidian или проводнике, потом кнопка «↻ Обновить».
+
+## Разработка
+
+```
+src/index.html   разметка-шаблон
+src/style.css    стили (светлая и тёмная тема)
+src/i18n.js      строки интерфейса ru/en
+src/app.js       логика
+vendor/          marked (MIT)
+build.mjs        собирает всё в один index.html
+tools/check.mjs  проверка совместимости документации
+test/smoke.mjs   смоук-тест в headless Chromium на test/fixture
+```
+
+```bash
+npm run build                       # src → index.html
+npm test                            # сборка и смоук-тест (нужен playwright с chromium)
+node test/smoke.mjs path/to/docs    # прогнать на реальной папке (только чтение)
+```
+
+`index.html` — собранный файл, он же отдаётся через GitHub Pages. Правь `src/` и пересобирай. Правила для агентов, которые работают над самим инструментом: [AGENTS.md](AGENTS.md).
+
+Лицензия MIT.

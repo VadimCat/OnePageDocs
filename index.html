@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="OnePageDocs 1.0.0">
+<title>OnePageDocs</title>
+<style>
+:root{
+  --bg:#f6f3ee; --paper:#fffdf9; --ink:#22201c; --muted:#77706a; --line:#e4ddd3;
+  --accent:#b4471f; --accent-soft:#f6e3d8; --link:#9b3a16;
+  --ok:#2f7d4f; --ok-soft:#dff0e5; --warn:#a46a00; --warn-soft:#f8ecd2; --bad:#b3261e; --bad-soft:#f9dedc;
+  --side:#efeae2; --code:#f1ece4; --hl:#fff1a8;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --head-h: 53px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161513; --paper:#1e1c1a; --ink:#ebe6df; --muted:#9a938a; --line:#34302b;
+    --accent:#e0794c; --accent-soft:#3a2418; --link:#ee9a72;
+    --ok:#6cc08f; --ok-soft:#1d3326; --warn:#e2b552; --warn-soft:#3a2e14; --bad:#ef8a80; --bad-soft:#3d1c1a;
+    --side:#1b1a18; --code:#2a2724; --hl:#5a4d10;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161513; --paper:#1e1c1a; --ink:#ebe6df; --muted:#9a938a; --line:#34302b;
+  --accent:#e0794c; --accent-soft:#3a2418; --link:#ee9a72;
+  --ok:#6cc08f; --ok-soft:#1d3326; --warn:#e2b552; --warn-soft:#3a2e14; --bad:#ef8a80; --bad-soft:#3d1c1a;
+  --side:#1b1a18; --code:#2a2724; --hl:#5a4d10;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif;display:grid;grid-template-columns:290px 1fr;grid-template-rows:auto 1fr}
+header{grid-column:1/-1;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--paper);border-bottom:1px solid var(--line);min-height:var(--head-h)}
+.brand{font-weight:800;letter-spacing:.08em;white-space:nowrap;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;max-width:32vw}
+.brand span{color:var(--accent);font-weight:600;letter-spacing:.02em;margin-left:6px}
+#q{flex:0 1 320px;min-width:120px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+.spacer{flex:1}
+#gstatus{font-size:13px;color:var(--muted);white-space:nowrap}
+#gstatus.dirty{color:var(--warn)} #gstatus.err{color:var(--bad)}
+button{font:inherit;font-size:14px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;white-space:nowrap}
+button:hover{border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:default;border-color:var(--line)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+aside{background:var(--side);border-right:1px solid var(--line);overflow:auto;height:calc(100vh - var(--head-h));position:sticky;top:var(--head-h);padding:10px 0 40px;font-size:14px}
+.grp{margin-bottom:6px}
+.ghead{display:flex;align-items:center;gap:6px;padding:6px 14px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer;user-select:none}
+.ghead .n{font-weight:500}
+.ghead .eye{margin-left:auto;border:0;background:none;padding:0 4px;font-size:13px;color:var(--muted)}
+.grp.off .gitems{display:none}
+.grp.off .ghead{opacity:.5}
+.gitems a{display:flex;align-items:center;gap:6px;padding:3px 14px 3px 22px;color:var(--ink);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gitems a span:last-child{overflow:hidden;text-overflow:ellipsis}
+.gitems a:hover{background:var(--line)}
+.gitems a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.gitems a .dot{width:7px;height:7px;border-radius:50%;flex:none;background:transparent}
+.gitems a.dirty .dot{background:var(--warn)}
+.gitems a.hide{display:none}
+main{position:relative;overflow:auto;height:calc(100vh - var(--head-h));padding:24px 24px 50vh;scroll-padding-top:12px}
+.file{max-width:860px;margin:0 auto 28px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px 36px 26px}
+.file.hide{display:none}
+.file.editing{border-color:var(--accent)}
+.fhead{display:flex;align-items:center;gap:8px;padding:8px 0;margin:0 -16px 0;border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--muted);position:sticky;top:-24px;background:var(--paper);z-index:2}
+.fpath{font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fstat{margin-left:auto;white-space:nowrap}
+.fstat.dirty{color:var(--warn)} .fstat.err{color:var(--bad);font-weight:600} .fstat.ok{color:var(--ok)}
+.fhead button{font-size:12.5px;padding:3px 10px}
+.gen{background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:1px 7px;font-size:11.5px;white-space:nowrap}
+.props{display:flex;flex-wrap:wrap;gap:6px 14px;margin:14px 0 4px;font-size:13px}
+.prop{display:flex;gap:6px;align-items:baseline}
+.prop b{color:var(--muted);font-weight:500}
+.pv{display:inline-flex;flex-wrap:wrap;gap:4px}
+.chip{background:var(--code);border-radius:6px;padding:0 7px}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip a.wl{border:0;color:inherit}
+.body{cursor:text}
+.body h1{font-size:30px;line-height:1.2;margin:18px 0 10px}
+.body h2{font-size:22px;margin:28px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.body h3{font-size:18px;margin:22px 0 6px}
+.body p,.body ul,.body ol{margin:8px 0}
+.body a{color:var(--link)}
+.body a.wl{text-decoration:none;border-bottom:1px solid currentColor}
+.body a.wl.missing{color:var(--muted);border-bottom-style:dotted}
+.body blockquote{margin:12px 0;padding:8px 14px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+.body blockquote p{margin:4px 0}
+.body code{font-family:var(--mono);font-size:.9em;background:var(--code);padding:1px 5px;border-radius:4px}
+.body pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow:auto}
+.body pre code{background:none;padding:0}
+.body table{border-collapse:collapse;margin:12px 0;font-size:14.5px;width:100%;display:block;overflow-x:auto}
+.body th,.body td{border:1px solid var(--line);padding:5px 10px;text-align:left;vertical-align:top}
+.body th{background:var(--code)}
+.body img{max-width:100%}
+.body li:has(> input[type=checkbox]){list-style:none;margin-left:-22px}
+.body input[type=checkbox]{width:16px;height:16px;margin:0 8px 0 0;vertical-align:-2px;accent-color:var(--accent);cursor:pointer}
+.body hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+.embed{display:inline-block;background:var(--code);color:var(--muted);border-radius:6px;padding:2px 10px;font-size:13.5px}
+.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{background:var(--hl)}100%{background:transparent}}
+textarea.src{display:block;width:100%;margin:14px 0 0;min-height:160px;resize:none;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:14.5px/1.6 var(--mono);padding:12px 14px;tab-size:2}
+textarea.src:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+#welcome{max-width:640px;margin:8vh auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 32px}
+#welcome h1{margin:0 0 8px;font-size:26px}
+#welcome p{color:var(--muted)}
+#welcome .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+#welcome .recent{margin-top:18px}
+#welcome .recent h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+#welcome .recent button{display:block;width:100%;text-align:left;margin-bottom:6px}
+#welcome .recent small{color:var(--muted);margin-left:8px}
+#welcome code{font-family:var(--mono);background:var(--code);padding:1px 6px;border-radius:4px;color:var(--ink)}
+#welcome .ver{font-size:12px;color:var(--muted);margin-top:18px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw}
+#toast.show{opacity:.95}
+mark{background:var(--hl);color:inherit;border-radius:2px}
+@media (max-width:820px){
+  body{grid-template-columns:1fr} aside{display:none} .file{padding:6px 16px 20px} main{padding:12px 10px 50vh}
+  #gstatus,.brand span{display:none}
+}
+@media print{
+  header,aside,.fhead button,.fstat,#toast{display:none!important}
+  body{display:block;background:#fff;color:#000} main{height:auto;overflow:visible;padding:0}
+  .file{border:0;max-width:none;break-before:page;padding:0} .fhead{position:static}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" id="brand">OnePageDocs</div>
+  <input id="q" type="search" disabled>
+  <div class="spacer"></div>
+  <span id="gstatus"></span>
+  <button id="btnEditAll" disabled></button>
+  <button id="btnRefresh" disabled></button>
+  <button id="btnOpen"></button>
+</header>
+<aside id="side"></aside>
+<main id="doc">
+  <div id="welcome">
+    <h1 id="wtitle"></h1>
+    <p id="wtext"></p>
+    <p id="wkeys"></p>
+    <div class="btns" id="wbtns"></div>
+    <div class="recent" id="wrecent"></div>
+    <p id="wnote"></p>
+    <div class="ver">OnePageDocs 1.0.0</div>
+  </div>
+</main>
+<div id="toast"></div>
+<script>
+/**
+ * marked v15.0.12 - a markdown parser
+ * Copyright (c) 2011-2025, Christopher Jeffrey. (MIT Licensed)
+ * https://github.com/markedjs/marked
+ */
+
+/**
+ * DO NOT EDIT THIS FILE
+ * The code in this file is generated from files in ./src/
+ */
+(function(g,f){if(typeof exports=="object"&&typeof module<"u"){module.exports=f()}else if("function"==typeof define && define.amd){define("marked",f)}else {g["marked"]=f()}}(typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : this,function(){var exports={};var __exports=exports;var module={exports};
+"use strict";var H=Object.defineProperty;var be=Object.getOwnPropertyDescriptor;var Te=Object.getOwnPropertyNames;var we=Object.prototype.hasOwnProperty;var ye=(l,e)=>{for(var t in e)H(l,t,{get:e[t],enumerable:!0})},Re=(l,e,t,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let s of Te(e))!we.call(l,s)&&s!==t&&H(l,s,{get:()=>e[s],enumerable:!(n=be(e,s))||n.enumerable});return l};var Se=l=>Re(H({},"__esModule",{value:!0}),l);var kt={};ye(kt,{Hooks:()=>L,Lexer:()=>x,Marked:()=>E,Parser:()=>b,Renderer:()=>$,TextRenderer:()=>_,Tokenizer:()=>S,defaults:()=>w,getDefaults:()=>z,lexer:()=>ht,marked:()=>k,options:()=>it,parse:()=>pt,parseInline:()=>ct,parser:()=>ut,setOptions:()=>ot,use:()=>lt,walkTokens:()=>at});module.exports=Se(kt);function z(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}var w=z();function N(l){w=l}var I={exec:()=>null};function h(l,e=""){let t=typeof l=="string"?l:l.source,n={replace:(s,i)=>{let r=typeof i=="string"?i:i.source;return r=r.replace(m.caret,"$1"),t=t.replace(s,r),n},getRegex:()=>new RegExp(t,e)};return n}var m={codeRemoveIndent:/^(?: {1,4}| {0,3}\t)/gm,outputLinkReplace:/\\([\[\]])/g,indentCodeCompensation:/^(\s+)(?:```)/,beginningSpace:/^\s+/,endingHash:/#$/,startingSpaceChar:/^ /,endingSpaceChar:/ $/,nonSpaceChar:/[^ ]/,newLineCharGlobal:/\n/g,tabCharGlobal:/\t/g,multipleSpaceGlobal:/\s+/g,blankLine:/^[ \t]*$/,doubleBlankLine:/\n[ \t]*\n[ \t]*$/,blockquoteStart:/^ {0,3}>/,blockquoteSetextReplace:/\n {0,3}((?:=+|-+) *)(?=\n|$)/g,blockquoteSetextReplace2:/^ {0,3}>[ \t]?/gm,listReplaceTabs:/^\t+/,listReplaceNesting:/^ {1,4}(?=( {4})*[^ ])/g,listIsTask:/^\[[ xX]\] /,listReplaceTask:/^\[[ xX]\] +/,anyLine:/\n.*\n/,hrefBrackets:/^<(.*)>$/,tableDelimiter:/[:|]/,tableAlignChars:/^\||\| *$/g,tableRowBlankLine:/\n[ \t]*$/,tableAlignRight:/^ *-+: *$/,tableAlignCenter:/^ *:-+: *$/,tableAlignLeft:/^ *:-+ *$/,startATag:/^<a /i,endATag:/^<\/a>/i,startPreScriptTag:/^<(pre|code|kbd|script)(\s|>)/i,endPreScriptTag:/^<\/(pre|code|kbd|script)(\s|>)/i,startAngleBracket:/^</,endAngleBracket:/>$/,pedanticHrefTitle:/^([^'"]*[^\s])\s+(['"])(.*)\2/,unicodeAlphaNumeric:/[\p{L}\p{N}]/u,escapeTest:/[&<>"']/,escapeReplace:/[&<>"']/g,escapeTestNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,escapeReplaceNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g,unescapeTest:/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig,caret:/(^|[^\[])\^/g,percentDecode:/%25/g,findPipe:/\|/g,splitPipe:/ \|/,slashPipe:/\\\|/g,carriageReturn:/\r\n|\r/g,spaceLine:/^ +$/gm,notSpaceStart:/^\S*/,endingNewline:/\n$/,listItemRegex:l=>new RegExp(`^( {0,3}${l})((?:[	 ][^\\n]*)?(?:\\n|$))`),nextBulletRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`),hrRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`),fencesBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}(?:\`\`\`|~~~)`),headingBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}#`),htmlBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}<(?:[a-z].*>|!--)`,"i")},$e=/^(?:[ \t]*(?:\n|$))+/,_e=/^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/,Le=/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,O=/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,ze=/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,F=/(?:[*+-]|\d{1,9}[.)])/,ie=/^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/,oe=h(ie).replace(/bull/g,F).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/\|table/g,"").getRegex(),Me=h(ie).replace(/bull/g,F).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/table/g,/ {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex(),Q=/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,Pe=/^[^\n]+/,U=/(?!\s*\])(?:\\.|[^\[\]\\])+/,Ae=h(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label",U).replace("title",/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex(),Ee=h(/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g,F).getRegex(),v="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",K=/<!--(?:-?>|[\s\S]*?(?:-->|$))/,Ce=h("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$))","i").replace("comment",K).replace("tag",v).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),le=h(Q).replace("hr",O).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",v).getRegex(),Ie=h(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph",le).getRegex(),X={blockquote:Ie,code:_e,def:Ae,fences:Le,heading:ze,hr:O,html:Ce,lheading:oe,list:Ee,newline:$e,paragraph:le,table:I,text:Pe},re=h("^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)").replace("hr",O).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code","(?: {4}| {0,3}	)[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",v).getRegex(),Oe={...X,lheading:Me,table:re,paragraph:h(Q).replace("hr",O).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",re).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",v).getRegex()},Be={...X,html:h(`^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:"[^"]*"|'[^']*'|\\s[^'"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))`).replace("comment",K).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:I,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:h(Q).replace("hr",O).replace("heading",` *#{1,6} *[^
+]`).replace("lheading",oe).replace("|table","").replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").replace("|tag","").getRegex()},qe=/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,ve=/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,ae=/^( {2,}|\\)\n(?!\s*$)/,De=/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,D=/[\p{P}\p{S}]/u,W=/[\s\p{P}\p{S}]/u,ce=/[^\s\p{P}\p{S}]/u,Ze=h(/^((?![*_])punctSpace)/,"u").replace(/punctSpace/g,W).getRegex(),pe=/(?!~)[\p{P}\p{S}]/u,Ge=/(?!~)[\s\p{P}\p{S}]/u,He=/(?:[^\s\p{P}\p{S}]|~)/u,Ne=/\[[^[\]]*?\]\((?:\\.|[^\\\(\)]|\((?:\\.|[^\\\(\)])*\))*\)|`[^`]*?`|<[^<>]*?>/g,ue=/^(?:\*+(?:((?!\*)punct)|[^\s*]))|^_+(?:((?!_)punct)|([^\s_]))/,je=h(ue,"u").replace(/punct/g,D).getRegex(),Fe=h(ue,"u").replace(/punct/g,pe).getRegex(),he="^[^_*]*?__[^_*]*?\\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\\*)punct(\\*+)(?=[\\s]|$)|notPunctSpace(\\*+)(?!\\*)(?=punctSpace|$)|(?!\\*)punctSpace(\\*+)(?=notPunctSpace)|[\\s](\\*+)(?!\\*)(?=punct)|(?!\\*)punct(\\*+)(?!\\*)(?=punct)|notPunctSpace(\\*+)(?=notPunctSpace)",Qe=h(he,"gu").replace(/notPunctSpace/g,ce).replace(/punctSpace/g,W).replace(/punct/g,D).getRegex(),Ue=h(he,"gu").replace(/notPunctSpace/g,He).replace(/punctSpace/g,Ge).replace(/punct/g,pe).getRegex(),Ke=h("^[^_*]*?\\*\\*[^_*]*?_[^_*]*?(?=\\*\\*)|[^_]+(?=[^_])|(?!_)punct(_+)(?=[\\s]|$)|notPunctSpace(_+)(?!_)(?=punctSpace|$)|(?!_)punctSpace(_+)(?=notPunctSpace)|[\\s](_+)(?!_)(?=punct)|(?!_)punct(_+)(?!_)(?=punct)","gu").replace(/notPunctSpace/g,ce).replace(/punctSpace/g,W).replace(/punct/g,D).getRegex(),Xe=h(/\\(punct)/,"gu").replace(/punct/g,D).getRegex(),We=h(/^<(scheme:[^\s\x00-\x1f<>]*|email)>/).replace("scheme",/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/).replace("email",/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/).getRegex(),Je=h(K).replace("(?:-->|$)","-->").getRegex(),Ve=h("^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>").replace("comment",Je).replace("attribute",/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/).getRegex(),q=/(?:\[(?:\\.|[^\[\]\\])*\]|\\.|`[^`]*`|[^\[\]\\`])*?/,Ye=h(/^!?\[(label)\]\(\s*(href)(?:(?:[ \t]*(?:\n[ \t]*)?)(title))?\s*\)/).replace("label",q).replace("href",/<(?:\\.|[^\n<>\\])+>|[^ \t\n\x00-\x1f]*/).replace("title",/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/).getRegex(),ke=h(/^!?\[(label)\]\[(ref)\]/).replace("label",q).replace("ref",U).getRegex(),ge=h(/^!?\[(ref)\](?:\[\])?/).replace("ref",U).getRegex(),et=h("reflink|nolink(?!\\()","g").replace("reflink",ke).replace("nolink",ge).getRegex(),J={_backpedal:I,anyPunctuation:Xe,autolink:We,blockSkip:Ne,br:ae,code:ve,del:I,emStrongLDelim:je,emStrongRDelimAst:Qe,emStrongRDelimUnd:Ke,escape:qe,link:Ye,nolink:ge,punctuation:Ze,reflink:ke,reflinkSearch:et,tag:Ve,text:De,url:I},tt={...J,link:h(/^!?\[(label)\]\((.*?)\)/).replace("label",q).getRegex(),reflink:h(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",q).getRegex()},j={...J,emStrongRDelimAst:Ue,emStrongLDelim:Fe,url:h(/^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,"i").replace("email",/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/).getRegex(),_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])((?:\\.|[^\\])*?(?:\\.|[^\s~\\]))\1(?=[^~]|$)/,text:/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/},nt={...j,br:h(ae).replace("{2,}","*").getRegex(),text:h(j.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()},B={normal:X,gfm:Oe,pedantic:Be},P={normal:J,gfm:j,breaks:nt,pedantic:tt};var st={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},fe=l=>st[l];function R(l,e){if(e){if(m.escapeTest.test(l))return l.replace(m.escapeReplace,fe)}else if(m.escapeTestNoEncode.test(l))return l.replace(m.escapeReplaceNoEncode,fe);return l}function V(l){try{l=encodeURI(l).replace(m.percentDecode,"%")}catch{return null}return l}function Y(l,e){let t=l.replace(m.findPipe,(i,r,o)=>{let a=!1,c=r;for(;--c>=0&&o[c]==="\\";)a=!a;return a?"|":" |"}),n=t.split(m.splitPipe),s=0;if(n[0].trim()||n.shift(),n.length>0&&!n.at(-1)?.trim()&&n.pop(),e)if(n.length>e)n.splice(e);else for(;n.length<e;)n.push("");for(;s<n.length;s++)n[s]=n[s].trim().replace(m.slashPipe,"|");return n}function A(l,e,t){let n=l.length;if(n===0)return"";let s=0;for(;s<n;){let i=l.charAt(n-s-1);if(i===e&&!t)s++;else if(i!==e&&t)s++;else break}return l.slice(0,n-s)}function de(l,e){if(l.indexOf(e[1])===-1)return-1;let t=0;for(let n=0;n<l.length;n++)if(l[n]==="\\")n++;else if(l[n]===e[0])t++;else if(l[n]===e[1]&&(t--,t<0))return n;return t>0?-2:-1}function me(l,e,t,n,s){let i=e.href,r=e.title||null,o=l[1].replace(s.other.outputLinkReplace,"$1");n.state.inLink=!0;let a={type:l[0].charAt(0)==="!"?"image":"link",raw:t,href:i,title:r,text:o,tokens:n.inlineTokens(o)};return n.state.inLink=!1,a}function rt(l,e,t){let n=l.match(t.other.indentCodeCompensation);if(n===null)return e;let s=n[1];return e.split(`
+`).map(i=>{let r=i.match(t.other.beginningSpace);if(r===null)return i;let[o]=r;return o.length>=s.length?i.slice(s.length):i}).join(`
+`)}var S=class{options;rules;lexer;constructor(e){this.options=e||w}space(e){let t=this.rules.block.newline.exec(e);if(t&&t[0].length>0)return{type:"space",raw:t[0]}}code(e){let t=this.rules.block.code.exec(e);if(t){let n=t[0].replace(this.rules.other.codeRemoveIndent,"");return{type:"code",raw:t[0],codeBlockStyle:"indented",text:this.options.pedantic?n:A(n,`
+`)}}}fences(e){let t=this.rules.block.fences.exec(e);if(t){let n=t[0],s=rt(n,t[3]||"",this.rules);return{type:"code",raw:n,lang:t[2]?t[2].trim().replace(this.rules.inline.anyPunctuation,"$1"):t[2],text:s}}}heading(e){let t=this.rules.block.heading.exec(e);if(t){let n=t[2].trim();if(this.rules.other.endingHash.test(n)){let s=A(n,"#");(this.options.pedantic||!s||this.rules.other.endingSpaceChar.test(s))&&(n=s.trim())}return{type:"heading",raw:t[0],depth:t[1].length,text:n,tokens:this.lexer.inline(n)}}}hr(e){let t=this.rules.block.hr.exec(e);if(t)return{type:"hr",raw:A(t[0],`
+`)}}blockquote(e){let t=this.rules.block.blockquote.exec(e);if(t){let n=A(t[0],`
+`).split(`
+`),s="",i="",r=[];for(;n.length>0;){let o=!1,a=[],c;for(c=0;c<n.length;c++)if(this.rules.other.blockquoteStart.test(n[c]))a.push(n[c]),o=!0;else if(!o)a.push(n[c]);else break;n=n.slice(c);let p=a.join(`
+`),u=p.replace(this.rules.other.blockquoteSetextReplace,`
+    $1`).replace(this.rules.other.blockquoteSetextReplace2,"");s=s?`${s}
+${p}`:p,i=i?`${i}
+${u}`:u;let d=this.lexer.state.top;if(this.lexer.state.top=!0,this.lexer.blockTokens(u,r,!0),this.lexer.state.top=d,n.length===0)break;let g=r.at(-1);if(g?.type==="code")break;if(g?.type==="blockquote"){let T=g,f=T.raw+`
+`+n.join(`
+`),y=this.blockquote(f);r[r.length-1]=y,s=s.substring(0,s.length-T.raw.length)+y.raw,i=i.substring(0,i.length-T.text.length)+y.text;break}else if(g?.type==="list"){let T=g,f=T.raw+`
+`+n.join(`
+`),y=this.list(f);r[r.length-1]=y,s=s.substring(0,s.length-g.raw.length)+y.raw,i=i.substring(0,i.length-T.raw.length)+y.raw,n=f.substring(r.at(-1).raw.length).split(`
+`);continue}}return{type:"blockquote",raw:s,tokens:r,text:i}}}list(e){let t=this.rules.block.list.exec(e);if(t){let n=t[1].trim(),s=n.length>1,i={type:"list",raw:"",ordered:s,start:s?+n.slice(0,-1):"",loose:!1,items:[]};n=s?`\\d{1,9}\\${n.slice(-1)}`:`\\${n}`,this.options.pedantic&&(n=s?n:"[*+-]");let r=this.rules.other.listItemRegex(n),o=!1;for(;e;){let c=!1,p="",u="";if(!(t=r.exec(e))||this.rules.block.hr.test(e))break;p=t[0],e=e.substring(p.length);let d=t[2].split(`
+`,1)[0].replace(this.rules.other.listReplaceTabs,Z=>" ".repeat(3*Z.length)),g=e.split(`
+`,1)[0],T=!d.trim(),f=0;if(this.options.pedantic?(f=2,u=d.trimStart()):T?f=t[1].length+1:(f=t[2].search(this.rules.other.nonSpaceChar),f=f>4?1:f,u=d.slice(f),f+=t[1].length),T&&this.rules.other.blankLine.test(g)&&(p+=g+`
+`,e=e.substring(g.length+1),c=!0),!c){let Z=this.rules.other.nextBulletRegex(f),te=this.rules.other.hrRegex(f),ne=this.rules.other.fencesBeginRegex(f),se=this.rules.other.headingBeginRegex(f),xe=this.rules.other.htmlBeginRegex(f);for(;e;){let G=e.split(`
+`,1)[0],C;if(g=G,this.options.pedantic?(g=g.replace(this.rules.other.listReplaceNesting,"  "),C=g):C=g.replace(this.rules.other.tabCharGlobal,"    "),ne.test(g)||se.test(g)||xe.test(g)||Z.test(g)||te.test(g))break;if(C.search(this.rules.other.nonSpaceChar)>=f||!g.trim())u+=`
+`+C.slice(f);else{if(T||d.replace(this.rules.other.tabCharGlobal,"    ").search(this.rules.other.nonSpaceChar)>=4||ne.test(d)||se.test(d)||te.test(d))break;u+=`
+`+g}!T&&!g.trim()&&(T=!0),p+=G+`
+`,e=e.substring(G.length+1),d=C.slice(f)}}i.loose||(o?i.loose=!0:this.rules.other.doubleBlankLine.test(p)&&(o=!0));let y=null,ee;this.options.gfm&&(y=this.rules.other.listIsTask.exec(u),y&&(ee=y[0]!=="[ ] ",u=u.replace(this.rules.other.listReplaceTask,""))),i.items.push({type:"list_item",raw:p,task:!!y,checked:ee,loose:!1,text:u,tokens:[]}),i.raw+=p}let a=i.items.at(-1);if(a)a.raw=a.raw.trimEnd(),a.text=a.text.trimEnd();else return;i.raw=i.raw.trimEnd();for(let c=0;c<i.items.length;c++)if(this.lexer.state.top=!1,i.items[c].tokens=this.lexer.blockTokens(i.items[c].text,[]),!i.loose){let p=i.items[c].tokens.filter(d=>d.type==="space"),u=p.length>0&&p.some(d=>this.rules.other.anyLine.test(d.raw));i.loose=u}if(i.loose)for(let c=0;c<i.items.length;c++)i.items[c].loose=!0;return i}}html(e){let t=this.rules.block.html.exec(e);if(t)return{type:"html",block:!0,raw:t[0],pre:t[1]==="pre"||t[1]==="script"||t[1]==="style",text:t[0]}}def(e){let t=this.rules.block.def.exec(e);if(t){let n=t[1].toLowerCase().replace(this.rules.other.multipleSpaceGlobal," "),s=t[2]?t[2].replace(this.rules.other.hrefBrackets,"$1").replace(this.rules.inline.anyPunctuation,"$1"):"",i=t[3]?t[3].substring(1,t[3].length-1).replace(this.rules.inline.anyPunctuation,"$1"):t[3];return{type:"def",tag:n,raw:t[0],href:s,title:i}}}table(e){let t=this.rules.block.table.exec(e);if(!t||!this.rules.other.tableDelimiter.test(t[2]))return;let n=Y(t[1]),s=t[2].replace(this.rules.other.tableAlignChars,"").split("|"),i=t[3]?.trim()?t[3].replace(this.rules.other.tableRowBlankLine,"").split(`
+`):[],r={type:"table",raw:t[0],header:[],align:[],rows:[]};if(n.length===s.length){for(let o of s)this.rules.other.tableAlignRight.test(o)?r.align.push("right"):this.rules.other.tableAlignCenter.test(o)?r.align.push("center"):this.rules.other.tableAlignLeft.test(o)?r.align.push("left"):r.align.push(null);for(let o=0;o<n.length;o++)r.header.push({text:n[o],tokens:this.lexer.inline(n[o]),header:!0,align:r.align[o]});for(let o of i)r.rows.push(Y(o,r.header.length).map((a,c)=>({text:a,tokens:this.lexer.inline(a),header:!1,align:r.align[c]})));return r}}lheading(e){let t=this.rules.block.lheading.exec(e);if(t)return{type:"heading",raw:t[0],depth:t[2].charAt(0)==="="?1:2,text:t[1],tokens:this.lexer.inline(t[1])}}paragraph(e){let t=this.rules.block.paragraph.exec(e);if(t){let n=t[1].charAt(t[1].length-1)===`
+`?t[1].slice(0,-1):t[1];return{type:"paragraph",raw:t[0],text:n,tokens:this.lexer.inline(n)}}}text(e){let t=this.rules.block.text.exec(e);if(t)return{type:"text",raw:t[0],text:t[0],tokens:this.lexer.inline(t[0])}}escape(e){let t=this.rules.inline.escape.exec(e);if(t)return{type:"escape",raw:t[0],text:t[1]}}tag(e){let t=this.rules.inline.tag.exec(e);if(t)return!this.lexer.state.inLink&&this.rules.other.startATag.test(t[0])?this.lexer.state.inLink=!0:this.lexer.state.inLink&&this.rules.other.endATag.test(t[0])&&(this.lexer.state.inLink=!1),!this.lexer.state.inRawBlock&&this.rules.other.startPreScriptTag.test(t[0])?this.lexer.state.inRawBlock=!0:this.lexer.state.inRawBlock&&this.rules.other.endPreScriptTag.test(t[0])&&(this.lexer.state.inRawBlock=!1),{type:"html",raw:t[0],inLink:this.lexer.state.inLink,inRawBlock:this.lexer.state.inRawBlock,block:!1,text:t[0]}}link(e){let t=this.rules.inline.link.exec(e);if(t){let n=t[2].trim();if(!this.options.pedantic&&this.rules.other.startAngleBracket.test(n)){if(!this.rules.other.endAngleBracket.test(n))return;let r=A(n.slice(0,-1),"\\");if((n.length-r.length)%2===0)return}else{let r=de(t[2],"()");if(r===-2)return;if(r>-1){let a=(t[0].indexOf("!")===0?5:4)+t[1].length+r;t[2]=t[2].substring(0,r),t[0]=t[0].substring(0,a).trim(),t[3]=""}}let s=t[2],i="";if(this.options.pedantic){let r=this.rules.other.pedanticHrefTitle.exec(s);r&&(s=r[1],i=r[3])}else i=t[3]?t[3].slice(1,-1):"";return s=s.trim(),this.rules.other.startAngleBracket.test(s)&&(this.options.pedantic&&!this.rules.other.endAngleBracket.test(n)?s=s.slice(1):s=s.slice(1,-1)),me(t,{href:s&&s.replace(this.rules.inline.anyPunctuation,"$1"),title:i&&i.replace(this.rules.inline.anyPunctuation,"$1")},t[0],this.lexer,this.rules)}}reflink(e,t){let n;if((n=this.rules.inline.reflink.exec(e))||(n=this.rules.inline.nolink.exec(e))){let s=(n[2]||n[1]).replace(this.rules.other.multipleSpaceGlobal," "),i=t[s.toLowerCase()];if(!i){let r=n[0].charAt(0);return{type:"text",raw:r,text:r}}return me(n,i,n[0],this.lexer,this.rules)}}emStrong(e,t,n=""){let s=this.rules.inline.emStrongLDelim.exec(e);if(!s||s[3]&&n.match(this.rules.other.unicodeAlphaNumeric))return;if(!(s[1]||s[2]||"")||!n||this.rules.inline.punctuation.exec(n)){let r=[...s[0]].length-1,o,a,c=r,p=0,u=s[0][0]==="*"?this.rules.inline.emStrongRDelimAst:this.rules.inline.emStrongRDelimUnd;for(u.lastIndex=0,t=t.slice(-1*e.length+r);(s=u.exec(t))!=null;){if(o=s[1]||s[2]||s[3]||s[4]||s[5]||s[6],!o)continue;if(a=[...o].length,s[3]||s[4]){c+=a;continue}else if((s[5]||s[6])&&r%3&&!((r+a)%3)){p+=a;continue}if(c-=a,c>0)continue;a=Math.min(a,a+c+p);let d=[...s[0]][0].length,g=e.slice(0,r+s.index+d+a);if(Math.min(r,a)%2){let f=g.slice(1,-1);return{type:"em",raw:g,text:f,tokens:this.lexer.inlineTokens(f)}}let T=g.slice(2,-2);return{type:"strong",raw:g,text:T,tokens:this.lexer.inlineTokens(T)}}}}codespan(e){let t=this.rules.inline.code.exec(e);if(t){let n=t[2].replace(this.rules.other.newLineCharGlobal," "),s=this.rules.other.nonSpaceChar.test(n),i=this.rules.other.startingSpaceChar.test(n)&&this.rules.other.endingSpaceChar.test(n);return s&&i&&(n=n.substring(1,n.length-1)),{type:"codespan",raw:t[0],text:n}}}br(e){let t=this.rules.inline.br.exec(e);if(t)return{type:"br",raw:t[0]}}del(e){let t=this.rules.inline.del.exec(e);if(t)return{type:"del",raw:t[0],text:t[2],tokens:this.lexer.inlineTokens(t[2])}}autolink(e){let t=this.rules.inline.autolink.exec(e);if(t){let n,s;return t[2]==="@"?(n=t[1],s="mailto:"+n):(n=t[1],s=n),{type:"link",raw:t[0],text:n,href:s,tokens:[{type:"text",raw:n,text:n}]}}}url(e){let t;if(t=this.rules.inline.url.exec(e)){let n,s;if(t[2]==="@")n=t[0],s="mailto:"+n;else{let i;do i=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])?.[0]??"";while(i!==t[0]);n=t[0],t[1]==="www."?s="http://"+t[0]:s=t[0]}return{type:"link",raw:t[0],text:n,href:s,tokens:[{type:"text",raw:n,text:n}]}}}inlineText(e){let t=this.rules.inline.text.exec(e);if(t){let n=this.lexer.state.inRawBlock;return{type:"text",raw:t[0],text:t[0],escaped:n}}}};var x=class l{tokens;options;state;tokenizer;inlineQueue;constructor(e){this.tokens=[],this.tokens.links=Object.create(null),this.options=e||w,this.options.tokenizer=this.options.tokenizer||new S,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options,this.tokenizer.lexer=this,this.inlineQueue=[],this.state={inLink:!1,inRawBlock:!1,top:!0};let t={other:m,block:B.normal,inline:P.normal};this.options.pedantic?(t.block=B.pedantic,t.inline=P.pedantic):this.options.gfm&&(t.block=B.gfm,this.options.breaks?t.inline=P.breaks:t.inline=P.gfm),this.tokenizer.rules=t}static get rules(){return{block:B,inline:P}}static lex(e,t){return new l(t).lex(e)}static lexInline(e,t){return new l(t).inlineTokens(e)}lex(e){e=e.replace(m.carriageReturn,`
+`),this.blockTokens(e,this.tokens);for(let t=0;t<this.inlineQueue.length;t++){let n=this.inlineQueue[t];this.inlineTokens(n.src,n.tokens)}return this.inlineQueue=[],this.tokens}blockTokens(e,t=[],n=!1){for(this.options.pedantic&&(e=e.replace(m.tabCharGlobal,"    ").replace(m.spaceLine,""));e;){let s;if(this.options.extensions?.block?.some(r=>(s=r.call({lexer:this},e,t))?(e=e.substring(s.raw.length),t.push(s),!0):!1))continue;if(s=this.tokenizer.space(e)){e=e.substring(s.raw.length);let r=t.at(-1);s.raw.length===1&&r!==void 0?r.raw+=`
+`:t.push(s);continue}if(s=this.tokenizer.code(e)){e=e.substring(s.raw.length);let r=t.at(-1);r?.type==="paragraph"||r?.type==="text"?(r.raw+=`
+`+s.raw,r.text+=`
+`+s.text,this.inlineQueue.at(-1).src=r.text):t.push(s);continue}if(s=this.tokenizer.fences(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.heading(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.hr(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.blockquote(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.list(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.html(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.def(e)){e=e.substring(s.raw.length);let r=t.at(-1);r?.type==="paragraph"||r?.type==="text"?(r.raw+=`
+`+s.raw,r.text+=`
+`+s.raw,this.inlineQueue.at(-1).src=r.text):this.tokens.links[s.tag]||(this.tokens.links[s.tag]={href:s.href,title:s.title});continue}if(s=this.tokenizer.table(e)){e=e.substring(s.raw.length),t.push(s);continue}if(s=this.tokenizer.lheading(e)){e=e.substring(s.raw.length),t.push(s);continue}let i=e;if(this.options.extensions?.startBlock){let r=1/0,o=e.slice(1),a;this.options.extensions.startBlock.forEach(c=>{a=c.call({lexer:this},o),typeof a=="number"&&a>=0&&(r=Math.min(r,a))}),r<1/0&&r>=0&&(i=e.substring(0,r+1))}if(this.state.top&&(s=this.tokenizer.paragraph(i))){let r=t.at(-1);n&&r?.type==="paragraph"?(r.raw+=`
+`+s.raw,r.text+=`
+`+s.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=r.text):t.push(s),n=i.length!==e.length,e=e.substring(s.raw.length);continue}if(s=this.tokenizer.text(e)){e=e.substring(s.raw.length);let r=t.at(-1);r?.type==="text"?(r.raw+=`
+`+s.raw,r.text+=`
+`+s.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=r.text):t.push(s);continue}if(e){let r="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(r);break}else throw new Error(r)}}return this.state.top=!0,t}inline(e,t=[]){return this.inlineQueue.push({src:e,tokens:t}),t}inlineTokens(e,t=[]){let n=e,s=null;if(this.tokens.links){let o=Object.keys(this.tokens.links);if(o.length>0)for(;(s=this.tokenizer.rules.inline.reflinkSearch.exec(n))!=null;)o.includes(s[0].slice(s[0].lastIndexOf("[")+1,-1))&&(n=n.slice(0,s.index)+"["+"a".repeat(s[0].length-2)+"]"+n.slice(this.tokenizer.rules.inline.reflinkSearch.lastIndex))}for(;(s=this.tokenizer.rules.inline.anyPunctuation.exec(n))!=null;)n=n.slice(0,s.index)+"++"+n.slice(this.tokenizer.rules.inline.anyPunctuation.lastIndex);for(;(s=this.tokenizer.rules.inline.blockSkip.exec(n))!=null;)n=n.slice(0,s.index)+"["+"a".repeat(s[0].length-2)+"]"+n.slice(this.tokenizer.rules.inline.blockSkip.lastIndex);let i=!1,r="";for(;e;){i||(r=""),i=!1;let o;if(this.options.extensions?.inline?.some(c=>(o=c.call({lexer:this},e,t))?(e=e.substring(o.raw.length),t.push(o),!0):!1))continue;if(o=this.tokenizer.escape(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.tag(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.link(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.reflink(e,this.tokens.links)){e=e.substring(o.raw.length);let c=t.at(-1);o.type==="text"&&c?.type==="text"?(c.raw+=o.raw,c.text+=o.text):t.push(o);continue}if(o=this.tokenizer.emStrong(e,n,r)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.codespan(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.br(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.del(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.autolink(e)){e=e.substring(o.raw.length),t.push(o);continue}if(!this.state.inLink&&(o=this.tokenizer.url(e))){e=e.substring(o.raw.length),t.push(o);continue}let a=e;if(this.options.extensions?.startInline){let c=1/0,p=e.slice(1),u;this.options.extensions.startInline.forEach(d=>{u=d.call({lexer:this},p),typeof u=="number"&&u>=0&&(c=Math.min(c,u))}),c<1/0&&c>=0&&(a=e.substring(0,c+1))}if(o=this.tokenizer.inlineText(a)){e=e.substring(o.raw.length),o.raw.slice(-1)!=="_"&&(r=o.raw.slice(-1)),i=!0;let c=t.at(-1);c?.type==="text"?(c.raw+=o.raw,c.text+=o.text):t.push(o);continue}if(e){let c="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(c);break}else throw new Error(c)}}return t}};var $=class{options;parser;constructor(e){this.options=e||w}space(e){return""}code({text:e,lang:t,escaped:n}){let s=(t||"").match(m.notSpaceStart)?.[0],i=e.replace(m.endingNewline,"")+`
+`;return s?'<pre><code class="language-'+R(s)+'">'+(n?i:R(i,!0))+`</code></pre>
+`:"<pre><code>"+(n?i:R(i,!0))+`</code></pre>
+`}blockquote({tokens:e}){return`<blockquote>
+${this.parser.parse(e)}</blockquote>
+`}html({text:e}){return e}heading({tokens:e,depth:t}){return`<h${t}>${this.parser.parseInline(e)}</h${t}>
+`}hr(e){return`<hr>
+`}list(e){let t=e.ordered,n=e.start,s="";for(let o=0;o<e.items.length;o++){let a=e.items[o];s+=this.listitem(a)}let i=t?"ol":"ul",r=t&&n!==1?' start="'+n+'"':"";return"<"+i+r+`>
+`+s+"</"+i+`>
+`}listitem(e){let t="";if(e.task){let n=this.checkbox({checked:!!e.checked});e.loose?e.tokens[0]?.type==="paragraph"?(e.tokens[0].text=n+" "+e.tokens[0].text,e.tokens[0].tokens&&e.tokens[0].tokens.length>0&&e.tokens[0].tokens[0].type==="text"&&(e.tokens[0].tokens[0].text=n+" "+R(e.tokens[0].tokens[0].text),e.tokens[0].tokens[0].escaped=!0)):e.tokens.unshift({type:"text",raw:n+" ",text:n+" ",escaped:!0}):t+=n+" "}return t+=this.parser.parse(e.tokens,!!e.loose),`<li>${t}</li>
+`}checkbox({checked:e}){return"<input "+(e?'checked="" ':"")+'disabled="" type="checkbox">'}paragraph({tokens:e}){return`<p>${this.parser.parseInline(e)}</p>
+`}table(e){let t="",n="";for(let i=0;i<e.header.length;i++)n+=this.tablecell(e.header[i]);t+=this.tablerow({text:n});let s="";for(let i=0;i<e.rows.length;i++){let r=e.rows[i];n="";for(let o=0;o<r.length;o++)n+=this.tablecell(r[o]);s+=this.tablerow({text:n})}return s&&(s=`<tbody>${s}</tbody>`),`<table>
+<thead>
+`+t+`</thead>
+`+s+`</table>
+`}tablerow({text:e}){return`<tr>
+${e}</tr>
+`}tablecell(e){let t=this.parser.parseInline(e.tokens),n=e.header?"th":"td";return(e.align?`<${n} align="${e.align}">`:`<${n}>`)+t+`</${n}>
+`}strong({tokens:e}){return`<strong>${this.parser.parseInline(e)}</strong>`}em({tokens:e}){return`<em>${this.parser.parseInline(e)}</em>`}codespan({text:e}){return`<code>${R(e,!0)}</code>`}br(e){return"<br>"}del({tokens:e}){return`<del>${this.parser.parseInline(e)}</del>`}link({href:e,title:t,tokens:n}){let s=this.parser.parseInline(n),i=V(e);if(i===null)return s;e=i;let r='<a href="'+e+'"';return t&&(r+=' title="'+R(t)+'"'),r+=">"+s+"</a>",r}image({href:e,title:t,text:n,tokens:s}){s&&(n=this.parser.parseInline(s,this.parser.textRenderer));let i=V(e);if(i===null)return R(n);e=i;let r=`<img src="${e}" alt="${n}"`;return t&&(r+=` title="${R(t)}"`),r+=">",r}text(e){return"tokens"in e&&e.tokens?this.parser.parseInline(e.tokens):"escaped"in e&&e.escaped?e.text:R(e.text)}};var _=class{strong({text:e}){return e}em({text:e}){return e}codespan({text:e}){return e}del({text:e}){return e}html({text:e}){return e}text({text:e}){return e}link({text:e}){return""+e}image({text:e}){return""+e}br(){return""}};var b=class l{options;renderer;textRenderer;constructor(e){this.options=e||w,this.options.renderer=this.options.renderer||new $,this.renderer=this.options.renderer,this.renderer.options=this.options,this.renderer.parser=this,this.textRenderer=new _}static parse(e,t){return new l(t).parse(e)}static parseInline(e,t){return new l(t).parseInline(e)}parse(e,t=!0){let n="";for(let s=0;s<e.length;s++){let i=e[s];if(this.options.extensions?.renderers?.[i.type]){let o=i,a=this.options.extensions.renderers[o.type].call({parser:this},o);if(a!==!1||!["space","hr","heading","code","table","blockquote","list","html","paragraph","text"].includes(o.type)){n+=a||"";continue}}let r=i;switch(r.type){case"space":{n+=this.renderer.space(r);continue}case"hr":{n+=this.renderer.hr(r);continue}case"heading":{n+=this.renderer.heading(r);continue}case"code":{n+=this.renderer.code(r);continue}case"table":{n+=this.renderer.table(r);continue}case"blockquote":{n+=this.renderer.blockquote(r);continue}case"list":{n+=this.renderer.list(r);continue}case"html":{n+=this.renderer.html(r);continue}case"paragraph":{n+=this.renderer.paragraph(r);continue}case"text":{let o=r,a=this.renderer.text(o);for(;s+1<e.length&&e[s+1].type==="text";)o=e[++s],a+=`
+`+this.renderer.text(o);t?n+=this.renderer.paragraph({type:"paragraph",raw:a,text:a,tokens:[{type:"text",raw:a,text:a,escaped:!0}]}):n+=a;continue}default:{let o='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(o),"";throw new Error(o)}}}return n}parseInline(e,t=this.renderer){let n="";for(let s=0;s<e.length;s++){let i=e[s];if(this.options.extensions?.renderers?.[i.type]){let o=this.options.extensions.renderers[i.type].call({parser:this},i);if(o!==!1||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(i.type)){n+=o||"";continue}}let r=i;switch(r.type){case"escape":{n+=t.text(r);break}case"html":{n+=t.html(r);break}case"link":{n+=t.link(r);break}case"image":{n+=t.image(r);break}case"strong":{n+=t.strong(r);break}case"em":{n+=t.em(r);break}case"codespan":{n+=t.codespan(r);break}case"br":{n+=t.br(r);break}case"del":{n+=t.del(r);break}case"text":{n+=t.text(r);break}default:{let o='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(o),"";throw new Error(o)}}}return n}};var L=class{options;block;constructor(e){this.options=e||w}static passThroughHooks=new Set(["preprocess","postprocess","processAllTokens"]);preprocess(e){return e}postprocess(e){return e}processAllTokens(e){return e}provideLexer(){return this.block?x.lex:x.lexInline}provideParser(){return this.block?b.parse:b.parseInline}};var E=class{defaults=z();options=this.setOptions;parse=this.parseMarkdown(!0);parseInline=this.parseMarkdown(!1);Parser=b;Renderer=$;TextRenderer=_;Lexer=x;Tokenizer=S;Hooks=L;constructor(...e){this.use(...e)}walkTokens(e,t){let n=[];for(let s of e)switch(n=n.concat(t.call(this,s)),s.type){case"table":{let i=s;for(let r of i.header)n=n.concat(this.walkTokens(r.tokens,t));for(let r of i.rows)for(let o of r)n=n.concat(this.walkTokens(o.tokens,t));break}case"list":{let i=s;n=n.concat(this.walkTokens(i.items,t));break}default:{let i=s;this.defaults.extensions?.childTokens?.[i.type]?this.defaults.extensions.childTokens[i.type].forEach(r=>{let o=i[r].flat(1/0);n=n.concat(this.walkTokens(o,t))}):i.tokens&&(n=n.concat(this.walkTokens(i.tokens,t)))}}return n}use(...e){let t=this.defaults.extensions||{renderers:{},childTokens:{}};return e.forEach(n=>{let s={...n};if(s.async=this.defaults.async||s.async||!1,n.extensions&&(n.extensions.forEach(i=>{if(!i.name)throw new Error("extension name required");if("renderer"in i){let r=t.renderers[i.name];r?t.renderers[i.name]=function(...o){let a=i.renderer.apply(this,o);return a===!1&&(a=r.apply(this,o)),a}:t.renderers[i.name]=i.renderer}if("tokenizer"in i){if(!i.level||i.level!=="block"&&i.level!=="inline")throw new Error("extension level must be 'block' or 'inline'");let r=t[i.level];r?r.unshift(i.tokenizer):t[i.level]=[i.tokenizer],i.start&&(i.level==="block"?t.startBlock?t.startBlock.push(i.start):t.startBlock=[i.start]:i.level==="inline"&&(t.startInline?t.startInline.push(i.start):t.startInline=[i.start]))}"childTokens"in i&&i.childTokens&&(t.childTokens[i.name]=i.childTokens)}),s.extensions=t),n.renderer){let i=this.defaults.renderer||new $(this.defaults);for(let r in n.renderer){if(!(r in i))throw new Error(`renderer '${r}' does not exist`);if(["options","parser"].includes(r))continue;let o=r,a=n.renderer[o],c=i[o];i[o]=(...p)=>{let u=a.apply(i,p);return u===!1&&(u=c.apply(i,p)),u||""}}s.renderer=i}if(n.tokenizer){let i=this.defaults.tokenizer||new S(this.defaults);for(let r in n.tokenizer){if(!(r in i))throw new Error(`tokenizer '${r}' does not exist`);if(["options","rules","lexer"].includes(r))continue;let o=r,a=n.tokenizer[o],c=i[o];i[o]=(...p)=>{let u=a.apply(i,p);return u===!1&&(u=c.apply(i,p)),u}}s.tokenizer=i}if(n.hooks){let i=this.defaults.hooks||new L;for(let r in n.hooks){if(!(r in i))throw new Error(`hook '${r}' does not exist`);if(["options","block"].includes(r))continue;let o=r,a=n.hooks[o],c=i[o];L.passThroughHooks.has(r)?i[o]=p=>{if(this.defaults.async)return Promise.resolve(a.call(i,p)).then(d=>c.call(i,d));let u=a.call(i,p);return c.call(i,u)}:i[o]=(...p)=>{let u=a.apply(i,p);return u===!1&&(u=c.apply(i,p)),u}}s.hooks=i}if(n.walkTokens){let i=this.defaults.walkTokens,r=n.walkTokens;s.walkTokens=function(o){let a=[];return a.push(r.call(this,o)),i&&(a=a.concat(i.call(this,o))),a}}this.defaults={...this.defaults,...s}}),this}setOptions(e){return this.defaults={...this.defaults,...e},this}lexer(e,t){return x.lex(e,t??this.defaults)}parser(e,t){return b.parse(e,t??this.defaults)}parseMarkdown(e){return(n,s)=>{let i={...s},r={...this.defaults,...i},o=this.onError(!!r.silent,!!r.async);if(this.defaults.async===!0&&i.async===!1)return o(new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));if(typeof n>"u"||n===null)return o(new Error("marked(): input parameter is undefined or null"));if(typeof n!="string")return o(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(n)+", string expected"));r.hooks&&(r.hooks.options=r,r.hooks.block=e);let a=r.hooks?r.hooks.provideLexer():e?x.lex:x.lexInline,c=r.hooks?r.hooks.provideParser():e?b.parse:b.parseInline;if(r.async)return Promise.resolve(r.hooks?r.hooks.preprocess(n):n).then(p=>a(p,r)).then(p=>r.hooks?r.hooks.processAllTokens(p):p).then(p=>r.walkTokens?Promise.all(this.walkTokens(p,r.walkTokens)).then(()=>p):p).then(p=>c(p,r)).then(p=>r.hooks?r.hooks.postprocess(p):p).catch(o);try{r.hooks&&(n=r.hooks.preprocess(n));let p=a(n,r);r.hooks&&(p=r.hooks.processAllTokens(p)),r.walkTokens&&this.walkTokens(p,r.walkTokens);let u=c(p,r);return r.hooks&&(u=r.hooks.postprocess(u)),u}catch(p){return o(p)}}}onError(e,t){return n=>{if(n.message+=`
+Please report this to https://github.com/markedjs/marked.`,e){let s="<p>An error occurred:</p><pre>"+R(n.message+"",!0)+"</pre>";return t?Promise.resolve(s):s}if(t)return Promise.reject(n);throw n}}};var M=new E;function k(l,e){return M.parse(l,e)}k.options=k.setOptions=function(l){return M.setOptions(l),k.defaults=M.defaults,N(k.defaults),k};k.getDefaults=z;k.defaults=w;k.use=function(...l){return M.use(...l),k.defaults=M.defaults,N(k.defaults),k};k.walkTokens=function(l,e){return M.walkTokens(l,e)};k.parseInline=M.parseInline;k.Parser=b;k.parser=b.parse;k.Renderer=$;k.TextRenderer=_;k.Lexer=x;k.lexer=x.lex;k.Tokenizer=S;k.Hooks=L;k.parse=k;var it=k.options,ot=k.setOptions,lt=k.use,at=k.walkTokens,ct=k.parseInline,pt=k,ut=b.parse,ht=x.lex;
+
+if(__exports != exports)module.exports = exports;return module.exports}));
+
+</script>
+<script>
+const OPD_VERSION = "1.0.0";
+"use strict";
+/* UI strings. Language: config "language" → browser language → "en". */
+const I18N = {
+  ru: {
+    search: "Поиск по всем документам…  (Ctrl+F)",
+    editAll: "Править всё", editAllDone: "Готово", editAllTip: "Все документы сразу в режим правки",
+    refresh: "↻ Обновить", refreshTip: "Перечитать папку с диска",
+    open: "Открыть папку", openOther: "Другая папка",
+    edit: "✎ Править", editDone: "✓ Готово",
+    welcomeTitle: "Вся документация одним документом",
+    welcomeText: "Выбери папку с Markdown-документацией (корень репозитория или папку <code>docs</code>). Все .md файлы откроются одной лентой, правки сразу пишутся в файлы на диске — Obsidian и git видят их сразу.",
+    welcomeKeys: "Править: двойной клик по тексту или ✎. Чекбоксы кликаются прямо в тексте. <b>Esc</b> — выйти из правки, <b>Ctrl+S</b> — сохранить всё, <b>Ctrl+F</b> — поиск, <b>Ctrl+P</b> — печать / PDF.",
+    pick: "Выбрать папку…", cont: "Продолжить: {name}", recent: "Недавние папки", lastDoc: "последний документ: {doc}",
+    noFS: "<b>Этот браузер не умеет сохранять в папки.</b> Открой страницу в Edge или Chrome.",
+    generated: "генерируется", generatedTip: "Файл пересобирается скриптом — ручные правки затрутся",
+    editHint: "Markdown целиком, со свойствами наверху. Сохраняется само через секунду. Esc — выйти из правки.",
+    embed: "встраивание Obsidian, тут не показывается",
+    missingLink: "Такого .md нет (возможно, это .canvas/.base Obsidian)", notFound: "Этого документа нет среди .md",
+    checkboxTip: "Отметить — сохранится в файл", taskNotFound: "Не нашёл этот пункт в файле — открой правку",
+    saving: "сохраняю…", unsaved: "● не сохранено", saved: "✓ сохранено {t}",
+    errNoWrite: "нет доступа на запись — открой папку заново", errSave: "не сохранилось: {m}",
+    allSaved: "всё сохранено на диск", unsavedN: "не сохранено: {n}", saveErrors: "есть ошибки сохранения",
+    found: "найдено: {n}", loaded: "Документов: {n}", noMd: "В этой папке нет .md файлов",
+    openFail: "Не удалось открыть: {m}", folderGone: "Папка недоступна — выбери заново",
+    conflict: "«{path}» изменили на диске снаружи (Obsidian, git…), пока ты его правил.\n\nОК — записать твою версию поверх.\nОтмена — взять версию с диска (твой текст скопируется в буфер обмена).",
+    savedToast: "Сохранено", notAllSaved: "Не всё сохранилось — смотри красные пометки",
+    configErr: "Ошибка в {file}: {m}", tooMany: "Слишком много файлов, показаны первые {n}. Сузь docsRoot или skip в конфиге.",
+    groupRoot: "Главное", groupOutside: "Вне документации", groupTip: "Показать / скрыть группу в ленте",
+    restored: "Открыто там, где остановился: {doc}",
+  },
+  en: {
+    search: "Search all documents…  (Ctrl+F)",
+    editAll: "Edit all", editAllDone: "Done", editAllTip: "Put every document into edit mode",
+    refresh: "↻ Reload", refreshTip: "Re-read the folder from disk",
+    open: "Open folder", openOther: "Switch folder",
+    edit: "✎ Edit", editDone: "✓ Done",
+    welcomeTitle: "All your docs as one document",
+    welcomeText: "Pick a folder with Markdown docs (a repo root or its <code>docs</code> folder). Every .md file opens in one continuous page; edits are written straight back to the files, so Obsidian and git see them immediately.",
+    welcomeKeys: "Edit: double-click the text or press ✎. Checkboxes work right in the text. <b>Esc</b> leaves edit mode, <b>Ctrl+S</b> saves everything, <b>Ctrl+F</b> searches, <b>Ctrl+P</b> prints / exports PDF.",
+    pick: "Choose folder…", cont: "Continue: {name}", recent: "Recent folders", lastDoc: "last document: {doc}",
+    noFS: "<b>This browser can't write to folders.</b> Open the page in Edge or Chrome.",
+    generated: "generated", generatedTip: "This file is regenerated by a script — manual edits will be overwritten",
+    editHint: "Raw Markdown including front matter. Autosaves after a second. Esc leaves edit mode.",
+    embed: "Obsidian embed, not rendered here",
+    missingLink: "No such .md (maybe an Obsidian .canvas/.base)", notFound: "That document isn't among the .md files",
+    checkboxTip: "Toggle — saved to the file", taskNotFound: "Couldn't find this item in the file — use edit mode",
+    saving: "saving…", unsaved: "● unsaved", saved: "✓ saved {t}",
+    errNoWrite: "no write access — reopen the folder", errSave: "not saved: {m}",
+    allSaved: "all saved to disk", unsavedN: "unsaved: {n}", saveErrors: "save errors",
+    found: "found: {n}", loaded: "Documents: {n}", noMd: "No .md files in this folder",
+    openFail: "Couldn't open: {m}", folderGone: "Folder unavailable — choose it again",
+    conflict: "\"{path}\" was changed on disk (Obsidian, git…) while you were editing it.\n\nOK — overwrite it with your version.\nCancel — take the disk version (your text is copied to the clipboard).",
+    savedToast: "Saved", notAllSaved: "Not everything was saved — see the red marks",
+    configErr: "Error in {file}: {m}", tooMany: "Too many files, showing the first {n}. Narrow docsRoot or skip in the config.",
+    groupRoot: "Main", groupOutside: "Outside docs", groupTip: "Show / hide this group",
+    restored: "Back where you left off: {doc}",
+  },
+};
+let LANG = (navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
+function setLang(l){ if (l && I18N[l]) LANG = l; document.documentElement.lang = LANG; }
+function t(key, vars){
+  let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.en[key] ?? key;
+  if (vars) for (const k in vars) s = s.split("{"+k+"}").join(String(vars[k]));
+  return s;
+}
+
+"use strict";
+/*
+ * OnePageDocs — every Markdown file of a folder as one editable page.
+ * Reads and writes the files directly through the File System Access API (Edge / Chrome).
+ * Optional per-project config: onepage-docs.json in the chosen folder (see docs/AI_DOCS_SETUP.md).
+ */
+const $ = s => document.querySelector(s);
+const CONFIG_FILES = ["onepage-docs.json", ".onepage-docs.json"];
+const DEFAULT_SKIP = ["node_modules", "worktrees", "Library", "Temp", "Logs", "obj", "bin", "Build", "Builds", "dist", "__pycache__", "venv"];
+const DEFAULT_STATUS = {
+  bad:  ["^не ", "^нет", "отсутств", "^открыт", "^not ", "^no ", "^none", "missing", "^open", "blocked", "заблок"],
+  warn: ["частич", "в работе", "предлож", "черновик", "partial", "in progress", "draft", "proposed", "wip", "review"],
+  ok:   ["^готов", "^принят", "^проверен", "^утвержд", "^сделан", "^закрыт", "^определён", "^done", "^ready", "^accepted", "^approved", "^verified", "^closed", "^complete"],
+};
+const DEFAULTS = {
+  title: null, subtitle: "", language: null,
+  docsRoot: "auto", includeOutside: true,
+  groups: [], pin: [], last: [], skip: [],
+  generatedMarker: [], hideProps: [], propLabels: {}, status: null,
+  maxFiles: 1500,
+};
+
+const S = { root: null, cfg: { ...DEFAULTS }, files: [], editAll: false, hidden: new Set(), q: "", active: null, docsRoot: "" };
+
+/* ---------- small helpers ---------- */
+function lsGet(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const stem = p => p.split("/").pop().replace(/\.(md|markdown)$/i, "");
+const slug = s => String(s).toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "");
+const asList = v => v == null ? [] : Array.isArray(v) ? v : [v];
+let toastT;
+function toast(msg){ const el = $("#toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), 2800); }
+const stateKey = () => "opd:state:" + (S.root ? S.root.name : "");
+function getState(){ return lsGet(stateKey(), {}); }
+function putState(patch){ lsSet(stateKey(), { ...getState(), ...patch }); }
+
+/* ---------- IndexedDB: remember folders ---------- */
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("onepage-docs", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function kvSet(k, v){ try{ const db = await idb(); await new Promise((res, rej) => { const tx = db.transaction("kv", "readwrite"); tx.objectStore("kv").put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }catch(e){} }
+async function kvGet(k){ try{ const db = await idb(); return await new Promise((res, rej) => { const r = db.transaction("kv").objectStore("kv").get(k); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }catch(e){ return null; } }
+async function rememberFolder(h){
+  let list = (await kvGet("recent")) || [];
+  const keep = [];
+  for (const r of list){ try{ if (!(await r.handle.isSameEntry(h))) keep.push(r); }catch(e){ keep.push(r); } }
+  keep.unshift({ handle: h, name: h.name, at: Date.now() });
+  await kvSet("recent", keep.slice(0, 6));
+}
+
+/* ---------- config ---------- */
+async function readConfig(root){
+  for (const name of CONFIG_FILES){
+    let fh; try{ fh = await root.getFileHandle(name); }catch(e){ continue; }
+    try{
+      const raw = await (await fh.getFile()).text();
+      return { ...DEFAULTS, ...JSON.parse(raw.replace(/^﻿/, "")), _file: name };
+    }catch(e){ toast(t("configErr", { file: name, m: e.message })); return { ...DEFAULTS, _file: name }; }
+  }
+  return { ...DEFAULTS };
+}
+function statusRules(){
+  const src = S.cfg.status || DEFAULT_STATUS;
+  const out = [];
+  for (const cls of ["bad", "warn", "ok"]) for (const re of asList(src[cls])) { try{ out.push([cls, new RegExp(re, "iu")]); }catch(e){} }
+  return out;
+}
+
+/* ---------- loading ---------- */
+async function dirAt(root, rel){
+  let d = root;
+  for (const seg of rel.split("/").filter(Boolean)) d = await d.getDirectoryHandle(seg);
+  return d;
+}
+async function walk(dir, prefix, out, depth, skip){
+  for await (const [name, h] of dir.entries()){
+    if (out.length >= S.cfg.maxFiles){ S.truncated = true; return; }
+    if (h.kind === "directory"){
+      if (name.startsWith(".") || skip.has(name) || depth > 8) continue;
+      await walk(h, prefix + name + "/", out, depth + 1, skip);
+    } else if (/\.(md|markdown)$/i.test(name)) out.push({ path: prefix + name, handle: h });
+  }
+}
+function matchesList(f, list){
+  const s = stem(f.path).toLowerCase(), r = f.rel.toLowerCase(), p = f.path.toLowerCase();
+  return asList(list).findIndex(x => { x = String(x).toLowerCase().replace(/\.(md|markdown)$/i, ""); return x === s || x + ".md" === r || x + ".md" === p; });
+}
+function classify(list){
+  const dr = S.docsRoot;
+  for (const f of list){
+    if (dr && !f.path.startsWith(dr + "/")){ f.rel = f.path; f.group = "@outside"; continue; }
+    f.rel = dr ? f.path.slice(dr.length + 1) : f.path;
+    f.group = f.rel.includes("/") ? f.rel.split("/")[0] : "";
+  }
+  const cfgGroups = asList(S.cfg.groups).map(g => typeof g === "string" ? { path: g } : g);
+  const gIndex = g => { if (g === "@outside") return 1e6; const i = cfgGroups.findIndex(x => (x.path || "") === g); return i >= 0 ? i : g === "" ? -1 : 1000; };
+  S.groupLabel = g => { const c = cfgGroups.find(x => (x.path || "") === g); return c && c.label ? c.label : g === "" ? t("groupRoot") : g === "@outside" ? t("groupOutside") : g; };
+  S.groupDefaultHidden = cfgGroups.filter(x => x.hidden).map(x => x.path || "");
+  const defaultPin = f => /^(0+[\s_.-]|readme$)/i.test(stem(f.path)) ? 0 : 1;
+  const pinRank = f => { const i = matchesList(f, S.cfg.pin); return i >= 0 ? i - 1e4 : asList(S.cfg.pin).length ? 0 : defaultPin(f) - 1; };
+  const lastRank = f => { const i = matchesList(f, S.cfg.last); return i >= 0 ? 1 + i : 0; };
+  list.sort((a, b) => gIndex(a.group) - gIndex(b.group) || a.group.localeCompare(b.group)
+    || lastRank(a) - lastRank(b) || pinRank(a) - pinRank(b)
+    || stem(a.path).localeCompare(stem(b.path), undefined, { numeric: true, sensitivity: "base" }));
+}
+// Blob.text() silently drops a UTF-8 BOM, so decode by hand to keep files byte-identical.
+const DEC = new TextDecoder("utf-8", { ignoreBOM: true });
+async function rawText(file){ return DEC.decode(await file.arrayBuffer()); }
+async function readFile(f){
+  const file = await f.handle.getFile();
+  const raw = await rawText(file);
+  f.bom = raw.charCodeAt(0) === 0xFEFF;
+  const body = f.bom ? raw.slice(1) : raw;
+  f.crlf = body.includes("\r\n");
+  f.text = f.crlf ? body.replace(/\r\n/g, "\n") : body;
+  f.diskText = raw; f.diskMod = file.lastModified;
+}
+async function load(root, opts = {}){
+  S.root = root;
+  S.cfg = await readConfig(root);
+  setLang(S.cfg.language); applyLabels();
+  let dr = S.cfg.docsRoot;
+  if (dr === "auto"){ dr = ""; try{ await root.getDirectoryHandle("docs"); dr = "docs"; }catch(e){} }
+  S.docsRoot = String(dr || "").replace(/^\/+|\/+$/g, "");
+  const skip = new Set([...DEFAULT_SKIP, ...asList(S.cfg.skip)]);
+  const list = []; S.truncated = false;
+  if (S.docsRoot && S.cfg.includeOutside === false){
+    let d; try{ d = await dirAt(root, S.docsRoot); }catch(e){ toast(t("configErr", { file: S.cfg._file || "config", m: "docsRoot not found" })); d = root; S.docsRoot = ""; }
+    await walk(d, S.docsRoot ? S.docsRoot + "/" : "", list, 0, skip);
+  } else await walk(root, "", list, 0, skip);
+  if (!list.length){ toast(t("noMd")); return; }
+  classify(list);
+  await Promise.all(list.map(readFile));
+  list.forEach((f, i) => { f.id = "f" + i; f.mode = S.editAll ? "edit" : "view"; f.dirty = false; f.saving = null; });
+  S.files = list;
+  S.byName = new Map(); S.byPath = new Map();
+  for (const f of list){
+    const k = stem(f.path).toLowerCase(); if (!S.byName.has(k)) S.byName.set(k, f);
+    S.byPath.set(f.path.toLowerCase(), f); S.byPath.set(f.rel.toLowerCase(), f);
+  }
+  const st = getState();
+  S.hidden = new Set(st.hidden || S.groupDefaultHidden);
+  build();
+  for (const b of ["#q", "#btnEditAll", "#btnRefresh"]) $(b).disabled = false;
+  $("#btnOpen").textContent = t("openOther");
+  const title = S.cfg.title || root.name;
+  $("#brand").innerHTML = esc(title) + (S.cfg.subtitle ? `<span>${esc(S.cfg.subtitle)}</span>` : "");
+  document.title = title + (S.cfg.subtitle ? " " + S.cfg.subtitle : "");
+  restorePosition(opts.keepScroll);
+  updateGlobal();
+  if (S.truncated) toast(t("tooMany", { n: list.length }));
+  rememberFolder(root);
+}
+async function pickFolder(){
+  try{
+    const h = await window.showDirectoryPicker({ id: "onepage-docs", mode: "readwrite" });
+    if (S.files.length && (await flushAll()) === false) return;
+    await load(h);
+  }catch(e){ if (e.name !== "AbortError") toast(t("openFail", { m: e.message })); }
+}
+async function openRemembered(h){
+  try{
+    let p = await h.queryPermission({ mode: "readwrite" });
+    if (p !== "granted") p = await h.requestPermission({ mode: "readwrite" });
+    if (p === "granted") await load(h); else toast(t("folderGone"));
+  }catch(e){ toast(t("folderGone")); }
+}
+
+/* ---------- position cache ---------- */
+function restorePosition(keepScroll){
+  const scroller = $("#doc");
+  if (keepScroll != null){ scroller.scrollTop = keepScroll; onScroll(); return; }
+  let target = null, offset = 0, fromHash = false;
+  const h = decodeURIComponent(location.hash.slice(1) || "");
+  if (h) { target = S.byPath.get(h.toLowerCase()); fromHash = !!target; }
+  const st = getState();
+  if (!target && st.path) target = S.byPath.get(String(st.path).toLowerCase());
+  if (target && st.path && target.path === st.path) offset = st.offset || 0;
+  if (!target){ scroller.scrollTop = 0; onScroll(); return; }
+  if (target.el.classList.contains("hide")) { S.hidden.delete(target.group); build(); target = S.files.find(x => x.path === target.path); }
+  scroller.scrollTop = Math.max(0, target.el.offsetTop + offset);
+  onScroll();
+  if (!fromHash && target !== S.files[0]) toast(t("restored", { doc: stem(target.path) }));
+}
+let saveT;
+function savePosition(){
+  if (!S.active) return;
+  const offset = Math.round($("#doc").scrollTop - S.active.el.offsetTop);
+  putState({ path: S.active.path, offset, at: Date.now(), hidden: [...S.hidden] });
+}
+let scrollRaf = 0;
+function onScroll(){
+  if (scrollRaf) return;
+  scrollRaf = requestAnimationFrame(() => {
+    scrollRaf = 0;
+    const top = $("#doc").scrollTop + 40;
+    let act = null;
+    for (const f of S.files){ if (f.el.classList.contains("hide")) continue; if (f.el.offsetTop <= top) act = f; else break; }
+    if (!act) act = S.files.find(f => !f.el.classList.contains("hide")) || null;
+    if (act !== S.active){
+      if (S.active) S.active.nav.classList.remove("active");
+      S.active = act;
+      if (act){
+        act.nav.classList.add("active"); act.nav.scrollIntoView({ block: "nearest" });
+        try{ history.replaceState(null, "", "#" + encodeURIComponent(act.path)); }catch(e){}
+      }
+    }
+    clearTimeout(saveT); saveT = setTimeout(savePosition, 300);
+  });
+}
+$("#doc").addEventListener("scroll", onScroll, { passive: true });
+
+/* ---------- building the page ---------- */
+function build(){
+  const side = $("#side"), doc = $("#doc");
+  side.innerHTML = ""; doc.innerHTML = ""; S.active = null;
+  const groups = new Map();
+  for (const f of S.files){ if (!groups.has(f.group)) groups.set(f.group, []); groups.get(f.group).push(f); }
+  for (const [g, fs] of groups){
+    const box = document.createElement("div"); box.className = "grp" + (S.hidden.has(g) ? " off" : "");
+    box.innerHTML = `<div class="ghead" title="${esc(t("groupTip"))}"><span>${esc(S.groupLabel(g))}</span><span class="n">${fs.length}</span><button class="eye">${S.hidden.has(g) ? "◌" : "●"}</button></div><div class="gitems"></div>`;
+    const items = box.querySelector(".gitems");
+    box.querySelector(".ghead").onclick = () => {
+      if (S.hidden.has(g)) S.hidden.delete(g); else S.hidden.add(g);
+      box.classList.toggle("off", S.hidden.has(g)); box.querySelector(".eye").textContent = S.hidden.has(g) ? "◌" : "●";
+      putState({ hidden: [...S.hidden] }); applyFilter();
+    };
+    for (const f of fs){
+      const a = document.createElement("a"); a.href = "#" + encodeURIComponent(f.path); a.title = f.path;
+      a.innerHTML = `<span class="dot"></span><span>${esc(stem(f.path))}</span>`;
+      a.onclick = e => { e.preventDefault(); reveal(f); };
+      f.nav = a; items.appendChild(a);
+    }
+    side.appendChild(box);
+  }
+  const markers = asList(S.cfg.generatedMarker);
+  for (const f of S.files){
+    const sec = document.createElement("section"); sec.className = "file"; sec.id = f.id; f.el = sec;
+    const isGen = /^generated:\s*true\s*$/m.test(f.text.split(/\n---/)[0]) || markers.some(m => m && f.text.includes(m));
+    const gen = isGen ? `<span class="gen" title="${esc(t("generatedTip"))}">${esc(t("generated"))}</span>` : "";
+    sec.innerHTML = `<div class="fhead"><span class="fpath">${esc(f.path)}</span>${gen}<span class="fstat"></span><button class="fedit"></button></div><div class="fwrap"></div>`;
+    sec.querySelector(".fedit").onclick = () => setMode(f, f.mode === "edit" ? "view" : "edit", true);
+    doc.appendChild(sec); render(f); setStat(f);
+  }
+  applyFilter();
+}
+function render(f){
+  const wrap = f.el.querySelector(".fwrap");
+  f.el.classList.toggle("editing", f.mode === "edit");
+  f.el.querySelector(".fedit").textContent = f.mode === "edit" ? t("editDone") : t("edit");
+  if (f.mode === "edit"){
+    wrap.innerHTML = `<textarea class="src" spellcheck="true"></textarea><div class="hint">${esc(t("editHint"))}</div>`;
+    const ta = wrap.querySelector("textarea"); ta.value = f.text; f.ta = ta;
+    ta.addEventListener("input", () => { f.text = ta.value; autosize(ta); touch(f); });
+    ta.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !S.editAll){ e.preventDefault(); setMode(f, "view"); }
+      if (e.key === "Tab" && !e.shiftKey){ e.preventDefault(); ta.setRangeText("  ", ta.selectionStart, ta.selectionEnd, "end"); ta.dispatchEvent(new Event("input")); }
+    });
+    requestAnimationFrame(() => autosize(ta));
+    return;
+  }
+  f.ta = null;
+  const { props, body, off } = splitFM(f.text);
+  f.bodyOff = off;
+  let html = props && props.length ? `<div class="props">${props.map(renderProp).join("")}</div>` : "";
+  html += `<div class="body">${marked.parse(wikify(body), { gfm: true })}</div>`;
+  wrap.innerHTML = html;
+  postProcess(f, wrap);
+  if (S.q) highlight(wrap, S.q);
+}
+function autosize(ta){ ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; }
+function setMode(f, mode, focus){
+  if (f.mode === mode) return;
+  const scroller = $("#doc"), top = f.el.getBoundingClientRect().top;
+  f.mode = mode; render(f);
+  const d = f.el.getBoundingClientRect().top - top; if (d) scroller.scrollTop += d;
+  if (mode === "edit" && focus && f.ta) f.ta.focus({ preventScroll: true });
+}
+
+/* ---------- Markdown helpers ---------- */
+function unq(s){ s = s.trim(); if ((s.startsWith("'") && s.endsWith("'")) || (s.startsWith('"') && s.endsWith('"'))) s = s.slice(1, -1).replace(/''/g, "'"); return s; }
+function splitFM(text){
+  const m = text.match(/^---\n([\s\S]*?)\n---[ \t]*(\n|$)/);
+  if (!m) return { props: null, body: text, off: 0 };
+  const props = []; let cur = null;
+  for (const line of m[1].split("\n")){
+    const kv = line.match(/^([^\s:#-][^:]*):\s*(.*)$/);
+    if (kv){
+      let v = kv[2].trim();
+      if (/^\[.*\]$/.test(v)) v = v.slice(1, -1).split(",").map(unq).filter(Boolean);
+      else v = v === "" ? [] : unq(v);
+      cur = [kv[1].trim(), v]; props.push(cur); continue;
+    }
+    const li = line.match(/^\s*-\s+(.*)$/);
+    if (li && cur){ if (!Array.isArray(cur[1])) cur[1] = [cur[1]]; cur[1].push(unq(li[1])); }
+  }
+  return { props, body: text.slice(m[0].length), off: m[0].length };
+}
+let RULES = [];
+function chipClass(v){ for (const [cls, re] of RULES) if (re.test(v)) return cls; return ""; }
+function renderProp([k, v]){
+  if (asList(S.cfg.hideProps).includes(k)) return "";
+  const vals = asList(v);
+  if (!vals.length) return "";
+  const label = (S.cfg.propLabels && S.cfg.propLabels[k]) || k;
+  return `<span class="prop"><b>${esc(label)}</b><span class="pv">${vals.map(x => `<span class="chip ${chipClass(String(x))}">${wikiInline(String(x))}</span>`).join("")}</span></span>`;
+}
+function wikiLink(inner){
+  inner = inner.replace(/\\\|/g, "|");
+  const [target, alias] = inner.split("|");
+  const [name, frag = ""] = target.split("#");
+  const label = alias || (frag ? (name ? `${name} › ${frag}` : frag) : name);
+  return `<a class="wl" href="#" data-to="${esc(name.trim())}" data-frag="${esc(frag.trim())}">${esc(label)}</a>`;
+}
+function wikiInline(s){
+  return s.split(/(\[\[[^\]\n]+?\]\])/g).map((p, i) => i % 2 ? wikiLink(p.slice(2, -2)) : esc(p)).join("");
+}
+function wikify(md){
+  return md.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/g).map((part, i) => i % 2 ? part : part
+    .replace(/!\[\[([^\]\n]+?)\]\]/g, (m, x) => `<span class="embed">⧉ ${esc(x)} — ${esc(t("embed"))}</span>`)
+    .replace(/\[\[([^\]\n]+?)\]\]/g, (m, inner) => wikiLink(inner))
+  ).join("");
+}
+function resolvePath(from, href){
+  const dir = from.path.split("/").slice(0, -1);
+  for (const seg of href.split("/")){ if (seg === "..") dir.pop(); else if (seg && seg !== ".") dir.push(seg); }
+  return dir.join("/");
+}
+function findFile(name, path){
+  if (path) return S.byPath.get(path.toLowerCase()) || null;
+  if (!name) return null;
+  const n = name.toLowerCase().replace(/\.(md|markdown)$/i, "");
+  return S.byName.get(n) || S.byPath.get(n + ".md") || S.byName.get(n.split("/").pop()) || null;
+}
+const blobCache = new Map();
+async function blobUrl(path){
+  if (blobCache.has(path)) return blobCache.get(path);
+  const parts = path.split("/"); const name = parts.pop();
+  const dir = await dirAt(S.root, parts.join("/"));
+  const url = URL.createObjectURL(await (await dir.getFileHandle(name)).getFile());
+  blobCache.set(path, url); return url;
+}
+function postProcess(f, wrap){
+  const used = new Set();
+  wrap.querySelectorAll(".body h1,.body h2,.body h3,.body h4,.body h5,.body h6").forEach(h => {
+    let id = f.id + "--" + (slug(h.textContent) || "h"); while (used.has(id)) id += "-"; used.add(id); h.id = id;
+  });
+  wrap.querySelectorAll("a[href]").forEach(a => {
+    if (a.classList.contains("wl")){
+      if (!a.dataset.to) a.dataset.self = f.id;
+      else if (!findFile(a.dataset.to)) { a.classList.add("missing"); a.title = t("missingLink"); }
+      return;
+    }
+    const href = a.getAttribute("href");
+    if (/^[a-z][a-z0-9+.-]*:/i.test(href)){ a.target = "_blank"; a.rel = "noopener"; return; }
+    let [p, frag = ""] = href.split("#");
+    try{ p = decodeURIComponent(p); frag = decodeURIComponent(frag); }catch(e){}
+    if (!p){ a.classList.add("wl"); a.dataset.self = f.id; a.dataset.frag = frag; return; }
+    if (!/\.(md|markdown)$/i.test(p)) return;
+    const tgt = findFile(null, resolvePath(f, p));
+    a.classList.add("wl"); a.dataset.path = tgt ? tgt.path : ""; a.dataset.frag = frag;
+    if (!tgt){ a.classList.add("missing"); a.title = t("missingLink"); }
+  });
+  wrap.querySelectorAll(".body img[src]").forEach(img => {
+    const src = img.getAttribute("src");
+    if (/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(src)) return;
+    let p = src; try{ p = decodeURIComponent(src); }catch(e){}
+    blobUrl(resolvePath(f, p)).then(u => { img.src = u; }).catch(() => {});
+  });
+  wrap.querySelectorAll('.body input[type="checkbox"]').forEach((cb, i) => {
+    cb.disabled = false; cb.title = t("checkboxTip");
+    cb.addEventListener("change", () => toggleTask(f, i, cb.checked));
+  });
+}
+function taskLines(body){
+  const lines = body.split("\n"), out = []; let fence = false;
+  lines.forEach((l, i) => {
+    if (/^\s*(```|~~~)/.test(l)){ fence = !fence; return; }
+    if (!fence && /^\s*(?:>\s*)*(?:[-*+]|\d+[.)])\s+\[[ xX]\]/.test(l)) out.push(i);
+  });
+  return { lines, out };
+}
+function toggleTask(f, idx, checked){
+  const head = f.text.slice(0, f.bodyOff), body = f.text.slice(f.bodyOff);
+  const { lines, out } = taskLines(body);
+  const li = out[idx];
+  if (li === undefined){ toast(t("taskNotFound")); render(f); return; }
+  lines[li] = lines[li].replace(/\[[ xX]\]/, checked ? "[x]" : "[ ]");
+  f.text = head + lines.join("\n"); touch(f);
+}
+
+/* ---------- navigation ---------- */
+function reveal(f, frag){
+  if (f.el.classList.contains("hide")){
+    if (S.hidden.has(f.group)){ S.hidden.delete(f.group); putState({ hidden: [...S.hidden] }); const p = f.path; build(); f = S.files.find(x => x.path === p); }
+    if (f.el.classList.contains("hide")){ $("#q").value = ""; S.q = ""; S.files.forEach(x => { if (x.mode === "view") render(x); }); applyFilter(); }
+  }
+  let target = f.el;
+  if (frag){
+    const fl = frag.toLowerCase().trim(), fs = slug(frag);
+    const hs = [...f.el.querySelectorAll(".body h1,.body h2,.body h3,.body h4,.body h5,.body h6")];
+    const txt = h => h.textContent.trim().toLowerCase();
+    target = hs.find(h => txt(h) === fl) || hs.find(h => slug(h.textContent) === fs) || hs.find(h => txt(h).startsWith(fl)) || f.el;
+  }
+  target.scrollIntoView({ block: "start" });
+  target.classList.remove("flash"); void target.offsetWidth; target.classList.add("flash");
+}
+$("#doc").addEventListener("click", e => {
+  const a = e.target.closest("a.wl"); if (!a) return;
+  e.preventDefault();
+  const self = a.dataset.self ? S.files.find(x => x.id === a.dataset.self) : null;
+  const f = self || (a.dataset.path ? findFile(null, a.dataset.path) : findFile(a.dataset.to));
+  if (f) reveal(f, a.dataset.frag); else toast(t("notFound"));
+});
+$("#doc").addEventListener("dblclick", e => {
+  const sec = e.target.closest(".file"); if (!sec || e.target.closest("a,input,button,textarea")) return;
+  const f = S.files.find(x => x.id === sec.id);
+  if (f && f.mode === "view"){ const sel = window.getSelection(); if (sel) sel.removeAllRanges(); setMode(f, "edit", true); }
+});
+
+/* ---------- search ---------- */
+function applyFilter(){
+  const q = S.q.toLowerCase(); let n = 0;
+  for (const f of S.files){
+    const hit = !q || f.text.toLowerCase().includes(q) || f.path.toLowerCase().includes(q);
+    const show = hit && (!S.hidden.has(f.group) || !!q);
+    f.el.classList.toggle("hide", !show); f.nav.classList.toggle("hide", !hit);
+    if (show) n++;
+  }
+  S.found = q ? n : null;
+  updateGlobal(); onScroll();
+}
+function highlight(root, q){
+  const ql = q.toLowerCase();
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); const nodes = []; let nd;
+  while ((nd = walker.nextNode())) if (nd.nodeValue.toLowerCase().includes(ql)) nodes.push(nd);
+  for (const tn of nodes){
+    const s = tn.nodeValue, lo = s.toLowerCase(); const fr = document.createDocumentFragment(); let i = 0, j;
+    while ((j = lo.indexOf(ql, i)) >= 0){ fr.append(s.slice(i, j)); const m = document.createElement("mark"); m.textContent = s.slice(j, j + q.length); fr.append(m); i = j + q.length; }
+    fr.append(s.slice(i)); tn.replaceWith(fr);
+  }
+}
+let qT;
+$("#q").addEventListener("input", e => {
+  clearTimeout(qT);
+  qT = setTimeout(() => {
+    S.q = e.target.value.trim();
+    S.files.forEach(f => { if (f.mode === "view") render(f); });
+    applyFilter();
+    const first = S.files.find(f => !f.el.classList.contains("hide"));
+    if (S.q && first){ const m = first.el.querySelector("mark"); (m || first.el).scrollIntoView({ block: "center" }); }
+  }, 200);
+});
+
+/* ---------- saving ---------- */
+function touch(f){
+  f.dirty = true; setStat(f);
+  clearTimeout(f.timer); f.timer = setTimeout(() => save(f), 900);
+}
+function setStat(f){
+  const st = f.el.querySelector(".fstat");
+  st.className = "fstat " + (f.err ? "err" : f.saving ? "" : f.dirty ? "dirty" : f.savedAt ? "ok" : "");
+  st.textContent = f.err ? "⚠ " + f.err : f.saving ? t("saving") : f.dirty ? t("unsaved") : f.savedAt ? t("saved", { t: f.savedAt }) : "";
+  f.nav.classList.toggle("dirty", !!f.dirty);
+  updateGlobal();
+}
+function updateGlobal(){
+  const g = $("#gstatus");
+  const d = S.files.filter(f => f.dirty).length, err = S.files.some(f => f.err);
+  g.className = err ? "err" : d ? "dirty" : "";
+  g.textContent = [S.found != null ? t("found", { n: S.found }) : "",
+    err ? t("saveErrors") : d ? t("unsavedN", { n: d }) : S.files.length ? t("allSaved") : ""].filter(Boolean).join(" · ");
+}
+function encode(f, text){
+  return (f.bom ? "﻿" : "") + (f.crlf ? text.replace(/\n/g, "\r\n") : text);
+}
+async function save(f){
+  clearTimeout(f.timer);
+  if (f.saving){ f.again = true; return f.saving; }
+  if (!f.dirty) return true;
+  f.saving = (async () => {
+    try{
+      const disk = await f.handle.getFile();
+      if (disk.lastModified !== f.diskMod){
+        const dt = await rawText(disk);
+        if (dt !== f.diskText){
+          if (!confirm(t("conflict", { path: f.path }))){
+            try{ await navigator.clipboard.writeText(f.text); }catch(e){}
+            await readFile(f); f.dirty = false; render(f); return true;
+          }
+        }
+      }
+      const snapshot = f.text, out = encode(f, snapshot);
+      const w = await f.handle.createWritable(); await w.write(out); await w.close();
+      f.diskMod = (await f.handle.getFile()).lastModified; f.diskText = out;
+      if (f.text === snapshot) f.dirty = false;
+      f.err = null; f.savedAt = new Date().toLocaleTimeString(LANG, { hour: "2-digit", minute: "2-digit" });
+      return true;
+    }catch(e){
+      f.err = e.name === "NotAllowedError" ? t("errNoWrite") : t("errSave", { m: e.message });
+      return false;
+    }
+  })();
+  setStat(f);
+  const ok = await f.saving;
+  f.saving = null; setStat(f);
+  if (f.again){ f.again = false; if (f.dirty) return save(f); }
+  return ok;
+}
+async function flushAll(){
+  const r = await Promise.all(S.files.filter(f => f.dirty || f.saving).map(save));
+  return !r.includes(false);
+}
+async function refreshFromDisk(full){
+  if (!S.root) return;
+  if (full){ await flushAll(); savePosition(); await load(S.root, { keepScroll: $("#doc").scrollTop }); return; }
+  for (const f of S.files){
+    if (f.dirty || f.saving) continue;
+    try{
+      const file = await f.handle.getFile();
+      if (file.lastModified !== f.diskMod){
+        await readFile(f);
+        if (f.mode === "edit" && f.ta){ if (document.activeElement !== f.ta){ f.ta.value = f.text; autosize(f.ta); } }
+        else render(f);
+      }
+    }catch(e){ /* removed or renamed on disk — picked up by a full reload */ }
+  }
+}
+
+/* ---------- wiring ---------- */
+function applyLabels(){
+  RULES = statusRules();
+  $("#q").placeholder = t("search");
+  $("#btnEditAll").textContent = S.editAll ? t("editAllDone") : t("editAll"); $("#btnEditAll").title = t("editAllTip");
+  $("#btnRefresh").textContent = t("refresh"); $("#btnRefresh").title = t("refreshTip");
+  $("#btnOpen").textContent = S.root ? t("openOther") : t("open");
+}
+$("#btnOpen").onclick = pickFolder;
+$("#btnRefresh").onclick = () => refreshFromDisk(true);
+$("#btnEditAll").onclick = () => {
+  S.editAll = !S.editAll; $("#btnEditAll").classList.toggle("on", S.editAll);
+  $("#btnEditAll").textContent = S.editAll ? t("editAllDone") : t("editAll");
+  const anchor = S.active;
+  S.files.forEach(f => { f.mode = S.editAll ? "edit" : "view"; render(f); });
+  if (anchor) requestAnimationFrame(() => anchor.el.scrollIntoView({ block: "start" }));
+};
+window.addEventListener("keydown", e => {
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && k === "s"){ e.preventDefault(); flushAll().then(ok => toast(ok ? t("savedToast") : t("notAllSaved"))); }
+  if ((e.ctrlKey || e.metaKey) && k === "f" && S.files.length){ e.preventDefault(); $("#q").focus(); $("#q").select(); }
+});
+window.addEventListener("focus", () => refreshFromDisk(false));
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden"){ savePosition(); flushAll(); } else refreshFromDisk(false); });
+window.addEventListener("pagehide", savePosition);
+window.addEventListener("beforeunload", e => {
+  savePosition();
+  if (S.files.some(f => f.dirty || f.saving)){ flushAll(); e.preventDefault(); e.returnValue = ""; }
+});
+
+(async function init(){
+  setLang(null); applyLabels();
+  $("#wtitle").textContent = t("welcomeTitle");
+  $("#wtext").innerHTML = t("welcomeText");
+  $("#wkeys").innerHTML = t("welcomeKeys");
+  if (!("showDirectoryPicker" in window)){ $("#btnOpen").disabled = true; $("#wnote").innerHTML = t("noFS"); return; }
+  const recent = (await kvGet("recent")) || [];
+  if (recent.length){
+    try{ if ((await recent[0].handle.queryPermission({ mode: "readwrite" })) === "granted"){ await load(recent[0].handle); return; } }catch(e){}
+  }
+  const btns = $("#wbtns");
+  if (recent[0]){
+    const b = document.createElement("button"); b.className = "primary"; b.textContent = t("cont", { name: recent[0].name });
+    b.onclick = () => openRemembered(recent[0].handle); btns.append(b);
+  }
+  const p = document.createElement("button"); p.className = recent.length ? "" : "primary"; p.textContent = t("pick"); p.onclick = pickFolder; btns.append(p);
+  if (recent.length > 1){
+    const box = $("#wrecent"); box.innerHTML = `<h2>${esc(t("recent"))}</h2>`;
+    for (const r of recent.slice(1)){
+      const st = lsGet("opd:state:" + r.name, {});
+      const b = document.createElement("button");
+      b.innerHTML = esc(r.name) + (st.path ? `<small>${esc(t("lastDoc", { doc: stem(st.path) }))}</small>` : "");
+      b.onclick = () => openRemembered(r.handle); box.append(b);
+    }
+  }
+})();
+
+</script>
+</body>
+</html>

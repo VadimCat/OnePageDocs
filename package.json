@@ -1,0 +1,13 @@
+{
+  "name": "onepage-docs",
+  "version": "1.0.0",
+  "description": "All Markdown docs of a folder as one editable page. Saves straight to disk. No install, no server.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node tools/check.mjs",
+    "test": "node build.mjs && node test/smoke.mjs"
+  }
+}
