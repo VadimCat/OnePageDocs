@@ -1,87 +1,87 @@
 # OnePageDocs
 
-Вся Markdown-документация папки одним документом, с правкой на месте. Правки сразу пишутся в `.md` файлы на диске, поэтому Obsidian, git и агенты видят их без экспорта и синхронизации. Ничего не нужно ставить и запускать сервер: это одна HTML-страница.
+All the Markdown docs in a folder as one document you can edit in place. Edits are written straight back to the `.md` files on disk, so Obsidian, git and AI agents see them immediately: no export, no sync. Nothing to install and no server to run: it is a single HTML page.
 
-**Открыть:** https://vadimcat.github.io/OnePageDocs/ (Edge или Chrome) или `index.html` из этого репозитория.
+**Open:** https://vadimcat.github.io/OnePageDocs/ (Edge or Chrome) or `index.html` from this repo.
 
-*English: one-page viewer/editor for a folder of Markdown docs (Obsidian-style vaults included). Edits are written straight back to the files through the File System Access API. Open the hosted page in Edge/Chrome, pick your repo folder, done. AI agents: see [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md).*
+English · **[Русский](README.ru.md)**
 
-## Содержание
+## Contents
 
-- [Что умеет](#что-умеет)
-- [Запуск локально (без интернета и сервера)](#запуск-локально-без-интернета-и-сервера)
-- [Подключить к своему проекту](#подключить-к-своему-проекту)
-- [Ограничения](#ограничения)
-- [Разработка](#разработка)
-- [Инструкция для ИИ-агентов: совместимость документации](docs/AI_DOCS_SETUP.md)
-- [Правила для агентов, которые дорабатывают сам инструмент](AGENTS.md)
+- [Features](#features)
+- [Run locally (offline, no server)](#run-locally-offline-no-server)
+- [Use it with your project](#use-it-with-your-project)
+- [Limitations](#limitations)
+- [Development](#development)
+- [Guide for AI agents: making docs compatible](docs/AI_DOCS_SETUP.md)
+- [Rules for agents working on the tool itself](AGENTS.md)
 
-## Что умеет
+## Features
 
-- Все `.md` файлы одной лентой, оглавление по папкам, поиск по всем документам с подсветкой.
-- Правка: двойной клик по тексту или кнопка ✎, режим «Править всё». Автосохранение через секунду, `Ctrl+S` — сохранить всё сразу.
-- Чекбоксы `- [ ]` отмечаются прямо в просмотре и пишутся в файл.
-- `[[wiki-ссылки]]`, `[[Документ#Раздел]]`, относительные `.md` ссылки и картинки работают внутри ленты.
-- Свойства front matter показываются плашками, статусы раскрашиваются.
-- Если файл поменялся на диске, пока ты его правил (Obsidian, git pull), редактор спросит, какую версию оставить.
-- Кодировка, BOM и переводы строк (CRLF/LF) файла сохраняются как были.
-- Запоминает папки и место, где ты остановился. При следующем открытии лента сразу прокручивается к последнему документу. Ссылка с `#путь/к/файлу.md` открывает конкретный документ.
-- `Ctrl+P` — печать всей ленты или сохранение в PDF.
-- Интерфейс на русском и английском, светлая и тёмная тема.
+- Every `.md` file in one continuous page, a sidebar grouped by folder, full-text search with highlighting.
+- Editing: double-click the text or press ✎, or switch everything to edit mode with "Edit all". Autosaves after a second; `Ctrl+S` saves everything at once.
+- `- [ ]` checkboxes can be ticked right in the rendered view and are written to the file.
+- `[[wikilinks]]`, `[[Note#Heading]]`, relative `.md` links and images work inside the page.
+- Front matter properties are shown as chips, with status values colour-coded.
+- If a file changes on disk while you are editing it (Obsidian, `git pull`), the editor asks which version to keep.
+- Encoding, BOM and line endings (CRLF/LF) are preserved exactly.
+- Remembers your folders and where you stopped: next time the page scrolls straight to the last document. A link with `#path/to/file.md` opens a specific document.
+- `Ctrl+P` prints the whole page or saves it as PDF.
+- English and Russian UI, light and dark theme.
 
-## Запуск локально (без интернета и сервера)
+## Run locally (offline, no server)
 
-Весь редактор — это один файл `index.html`, всё нужное уже внутри. Ни Node, ни сервер не нужны.
+The whole editor is one file, `index.html`, with everything inlined. No Node, no server.
 
-1. Скачай `index.html` одним из способов:
-   - открой [index.html](index.html) на GitHub → кнопка **Download raw file**;
-   - или весь репозиторий: `git clone https://github.com/VadimCat/OnePageDocs` (или **Code → Download ZIP**).
-2. Открой файл в **Edge или Chrome**: двойной клик (если браузер по умолчанию на Chromium), перетаскивание в окно браузера или [launchers/OnePageDocs.bat](launchers/OnePageDocs.bat) из клона (откроет в Edge).
-3. Нажми **«Выбрать папку…»**, укажи корень репозитория с доками и разреши редактирование.
+1. Get `index.html` in one of these ways:
+   - open [index.html](index.html) on GitHub and press **Download raw file**;
+   - or get the whole repo: `git clone https://github.com/VadimCat/OnePageDocs` (or **Code → Download ZIP**).
+2. Open the file in **Edge or Chrome**: double-click it (if your default browser is Chromium-based), drag it into a browser window, or run [launchers/OnePageDocs.bat](launchers/OnePageDocs.bat) from the clone (opens it in Edge).
+3. Press **"Choose folder…"**, pick the root of the repo with your docs and allow editing.
 
-Файл можно положить куда угодно, например прямо в репозиторий проекта рядом с документацией. Обновиться — скачать `index.html` заново или `git pull`.
+You can keep the file anywhere, for example right inside your project repo next to the docs. To update, download `index.html` again or `git pull`.
 
-Онлайн-версия и локальный файл живут на разных адресах, поэтому недавние папки и последнее место запоминаются отдельно для каждого.
+The hosted page and a local file live at different addresses, so each remembers its own recent folders and last position.
 
-## Подключить к своему проекту
+## Use it with your project
 
-1. Открой страницу и выбери **корень репозитория**. Папка `docs` найдётся сама.
-2. По желанию добавь в корень `onepage-docs.json`: название, порядок и подписи групп, закреплённые документы, генерируемые файлы и т. д. Пример: [examples/onepage-docs.json](examples/onepage-docs.json). Все поля: [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md#3-конфиг-onepage-docsjson), [схема](onepage-docs.schema.json).
-3. Проверь совместимость:
+1. Open the page and choose the **repo root**. A `docs` folder is picked up automatically.
+2. Optionally add `onepage-docs.json` to the root: title, group order and labels, pinned documents, generated files and more. Example: [examples/onepage-docs.json](examples/onepage-docs.json). All fields: [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md#3-конфиг-onepage-docsjson), [schema](onepage-docs.schema.json).
+3. Check compatibility:
    ```bash
    curl -sL https://raw.githubusercontent.com/VadimCat/OnePageDocs/main/tools/check.mjs | node - path/to/repo
    ```
 
-Если доки готовит агент, дай ему [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md). Там правила, конфиг и порядок работы.
+If an agent prepares the docs, give it [docs/AI_DOCS_SETUP.md](docs/AI_DOCS_SETUP.md): rules, config and a step-by-step workflow.
 
-Для Windows есть [launchers/OnePageDocs.bat](launchers/OnePageDocs.bat): кладёшь рядом с проектом, и он открывает редактор в Edge.
+On Windows, [launchers/OnePageDocs.bat](launchers/OnePageDocs.bat) opens the editor in Edge; drop it next to your project.
 
-## Ограничения
+## Limitations
 
-- Нужен Chromium-браузер (Edge, Chrome, Opera, Brave): только у них есть запись в папки. В Firefox и Safari страница не откроет папку.
-- `.canvas`, `.base` и встраивания `![[...]]` из Obsidian не рендерятся, на их месте плашка.
-- Front matter читается плоский: `key: value` и списки.
-- Файлы не создаются, не переименовываются и не удаляются. Это делается в Obsidian или проводнике, потом кнопка «↻ Обновить».
+- Needs a Chromium browser (Edge, Chrome, Opera, Brave): only they can write to folders. Firefox and Safari can't open a folder.
+- Obsidian `.canvas`, `.base` and `![[...]]` embeds are not rendered; a placeholder is shown instead.
+- Front matter is read flat: `key: value` and lists.
+- Files are not created, renamed or deleted. Do that in Obsidian or your file manager, then press "↻ Reload".
 
-## Разработка
+## Development
 
 ```
-src/index.html   разметка-шаблон
-src/style.css    стили (светлая и тёмная тема)
-src/i18n.js      строки интерфейса ru/en
-src/app.js       логика
+src/index.html   page template
+src/style.css    styles (light and dark theme)
+src/i18n.js      UI strings, ru/en
+src/app.js       logic
 vendor/          marked (MIT)
-build.mjs        собирает всё в один index.html
-tools/check.mjs  проверка совместимости документации
-test/smoke.mjs   смоук-тест в headless Chromium на test/fixture
+build.mjs        bundles everything into a single index.html
+tools/check.mjs  docs compatibility checker
+test/smoke.mjs   smoke test in headless Chromium against test/fixture
 ```
 
 ```bash
 npm run build                       # src → index.html
-npm test                            # сборка и смоук-тест (нужен playwright с chromium)
-node test/smoke.mjs path/to/docs    # прогнать на реальной папке (только чтение)
+npm test                            # build + smoke test (needs playwright with chromium)
+node test/smoke.mjs path/to/docs    # run against a real folder (read-only)
 ```
 
-`index.html` — собранный файл, он же отдаётся через GitHub Pages. Правь `src/` и пересобирай. Правила для агентов, которые работают над самим инструментом: [AGENTS.md](AGENTS.md).
+`index.html` is a build output and is also what GitHub Pages serves. Edit `src/` and rebuild. Rules for agents working on the tool itself: [AGENTS.md](AGENTS.md).
 
-Лицензия MIT.
+MIT licensed.
